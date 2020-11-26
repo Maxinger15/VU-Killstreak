@@ -9,15 +9,16 @@ class Progess extends React.Component {
   render() {
     return (
       <div style={this.props.style} className={this.props.className}>
+        <div style={{position:"absolute",color:"white",left:"11%",top:"13%",fontSize:"x-large"}}>200</div>
           <Steps
             current={1}
             percent={60}
             direction="vertical"
-            style={{ color: "white", transform: "scale(1.2)",right:"5%",position:"absolute",width:"fit-content",fontWeight:"100",opacity:"0.6"}}
+            style={{ color: "white", transform: "scale(1.2)",left:"5%",top:"21%",position:"absolute",width:"fit-content",fontWeight:"100"}}
             size={200}
           >
             <Step
-              title="Granaten"
+              title="Grenades"
               description="Left: 0"
               style={{ color: "white" }}
             />
@@ -27,7 +28,7 @@ class Progess extends React.Component {
               style={{ color: "white" }}
             />
             <Step
-              title="Bots"
+              title="UAV"
               description="Left 3100"
               style={{ color: "white" }}
             />
@@ -37,6 +38,7 @@ class Progess extends React.Component {
               style={{ color: "white" }}
             />
           </Steps>
+          
         </div>
     );
   }
