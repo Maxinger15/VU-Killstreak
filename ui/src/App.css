@@ -20,3 +20,7 @@
 .ant-steps-item-container{
   padding-bottom: 5%;
 }
+.ant-steps-item .ant-steps-item-content{
+  position: relative;
+  top: -15px;
+}

@@ -13,7 +13,7 @@ class Progess extends React.Component {
             current={1}
             percent={60}
             direction="vertical"
-            style={{ color: "white", transform: "scale(1.2)",left:"80px",position:"absolute"}}
+            style={{ color: "white", transform: "scale(1.2)",right:"5%",position:"absolute",width:"fit-content",fontWeight:"100",opacity:"0.6"}}
             size={200}
           >
             <Step
