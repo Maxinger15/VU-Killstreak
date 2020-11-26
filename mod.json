@@ -1,0 +1,10 @@
+{
+    "Name": "killstreaks",
+    "Description": "This adds Killstreakts to the Game",
+    "Version": "1.0.0",
+    "HasVeniceEXT": true,
+    "HasWebUI": true,
+    "Dependencies": {
+        "veniceext": "^1.0.0"
+    }
+}
