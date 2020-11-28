@@ -3,7 +3,7 @@ import { Layout } from "antd";
 
 import "antd/dist/antd.css";
 import "./App.css";
-import Progress from "./progress";
+import Progress from "./components/progress";
 const { Header, Footer, Sider, Content } = Layout;
 
 class App extends React.Component {
@@ -26,6 +26,7 @@ class App extends React.Component {
                 display: "flex",
                 alignItems: "center",
                 opacity: "0.5",
+                fontFamily:"bf3Better"
               }}
             />
           </Sider>

@@ -2,7 +2,10 @@
   font-family: battlefield3;
   src: url(./font/bebas.ttf);
 }
-
+@font-face {
+  font-family: bf3Better;
+  src: url(./font/bffont.ttf);
+}
 .overallBackground{
   background-color: transparent;
   
@@ -60,4 +63,10 @@
 }
 .ant-steps-vertical > .ant-steps-item > .ant-steps-item-container > .ant-steps-item-tail::after{
   width: 2px;
+}
+.ant-steps-item-icon{
+  font-family: bf3Better;
+}
+.ant-steps-item-icon .ant-steps-icon{
+  top: -2px;
 }
