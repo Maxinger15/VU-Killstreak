@@ -1,4 +1,4 @@
-let layout = {
+let layout2 = {
     perks: [
         {
             cost: 200,
@@ -22,5 +22,23 @@ let layout = {
         }
     ]
 }
+
+let layout =  [
+        [
+            "vu-artystrike:Invoke","vu-ac130:Invoke"
+        ],
+        [
+            "InputDeviceKeys.IDK_F5","InputDeviceKeys.IDK_F6"
+        ],
+        [
+            150,250,350,450
+        ],
+        [
+            "Grenades","Health","Airstrike","AC130"
+        ],
+        [
+            "Left %NR","Left %NR","Left %NR","Left %NR"
+        ]
+    ]
 
 export default layout;
