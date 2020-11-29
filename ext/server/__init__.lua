@@ -4,7 +4,6 @@ function Killstreak:__init()
     print("Initializing server module")
     self.playerScores = {}
     self.playerKillstreakScore = {}
-    self.lastOutput = 0
     Events:Subscribe('Level:Loaded', self, self.OnLoad)
     Events:Subscribe('Level:Destroy', self, self.ResetState)
     Events:Subscribe('Player:Left', self, self.OnPlayerLeft)
@@ -44,14 +43,6 @@ function Killstreak:OnPlayerUpdate(player, deltaTime)
         self.playerKillstreakScore[player.id] = player.score
         modified = true
     end
-
-    self.lastOutput = self.lastOutput + 1
-    if self.lastOutput == 30 then
-        print("Name |  score | kills | deaths | playerScores | playerKillstreakScore")
-        print(tostring(player.name).." | "..tostring(player.score).." | "..tostring(player.kills).." | "..tostring(player.deaths).." | "..tostring(self.playerScores[player.id]).." | "..tostring(self.playerKillstreakScore[player.id]))
-        self.lastOutput = 0
-    end
-
     if player.score > self.playerScores[player.id] then
         self.playerKillstreakScore[player.id] = self.playerKillstreakScore[player.id] + (player.score - self.playerScores[player.id])
         self.playerScores[player.id] = player.score
