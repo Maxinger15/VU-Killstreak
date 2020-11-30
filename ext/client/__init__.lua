@@ -8,13 +8,27 @@ end)
 Events:Subscribe('Player:Connected', function(player)
     NetEvents:SendLocal("Killstreak:newClient",player)
 end)
-function getConf(conf)
-    conf = json.encode(conf)
-    print("Get conf "..conf)
-    conf = json.decode(conf)
+function getConf(config)
+    conf = json.decode(config)
+    print("Get conf "..config)
+    confResend = json.encode(config)
     WebUI:Init()
-    WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:getConfig",{detail:"'.. conf ..'"}))')
+    WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:getConfig",{detail:'.. confResend ..'}))')
     WebUI:Show()
+    config = json.decode(config)
+    Events:Subscribe("Client:UpdateInput", function(delta)
+        if config == nil then
+            return;
+        end
+        
+        for i,v in pairs(config[2]) do
+            if InputManager:WentKeyUp(tonumber(v)) then
+                Events:Dispatch(config[1][i], i)
+                return
+            end
+        end
+    
+    end)
 end
 
 NetEvents:Subscribe('Killstreak:ScoreUpdate', function(data)
@@ -27,21 +41,9 @@ end)
 -- invoke this to adjust the points your killstreak costs
 -- usedStep = index you got with the Invoke event (parameter 1)
 Events:Subscribe("Killstreak:usedStep",function(usedStep)
-    --WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UsedKillstreak",{detail:"'.. usedStep ..'"}))')
     NetEvents:Dispatch("Killstreak:notifyServerUsedSteps",usedStep,PlayerManager:getLocalPlayer())
 end)
 
 
 
-Events:Subscribe("Client:UpdateInput", function(delta)
-    if conf == nil then
-        return;
-    end
-    for k,v in conf[1] do
-        if InputManager:WentKeyUp(v) then
-            Events:Dispatch(conf[0][k], k)
-            return
-        end
-    end
 
-end)

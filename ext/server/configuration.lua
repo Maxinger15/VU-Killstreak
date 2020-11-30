@@ -3,10 +3,10 @@
 
 local conf  ={
     {
-        "vu-artystrike:Invoke","vu-ac130:Invoke"
+        "vu-artystrike:Invoke","vu-ac130:Invoke","vu-artystrike:Invoke","vu-ac130:Invoke"
     },
     {
-        InputDeviceKeys.IDK_F5,InputDeviceKeys.IDK_F6
+        InputDeviceKeys.IDK_F5,InputDeviceKeys.IDK_F6,InputDeviceKeys.IDK_F7,InputDeviceKeys.IDK_F8
     },
     {
         150,250,350,450
