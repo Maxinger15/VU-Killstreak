@@ -50,7 +50,7 @@ function Killstreak:OnPlayerUpdate(player, deltaTime)
     end
     modified = false
     if self.playerScores[player.id] == nil then
-        self.playerScores[player.id] = player.score
+        self.playerScores[player.id] = player.score 
         self.playerKillstreakScore[player.id] = player.score
         modified = true
     end

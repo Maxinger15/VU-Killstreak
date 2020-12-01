@@ -3,7 +3,7 @@
 
 local conf  ={
     {
-        "vu-artillerystrike:Invoke","vu-ac130:Invoke","vu-artystrike:Invoke","vu-ac130:Invoke"
+        "vu-artillerystrike","vu-ac130","vu-artystrike","vu-ac130"
     },
     {
         InputDeviceKeys.IDK_F5,InputDeviceKeys.IDK_F6,InputDeviceKeys.IDK_F7,InputDeviceKeys.IDK_F8
