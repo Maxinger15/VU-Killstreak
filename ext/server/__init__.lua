@@ -9,6 +9,7 @@ function Killstreak:__init()
     Events:Subscribe('Level:Destroy', self, self.ResetState)
     Events:Subscribe('Player:Left', self, self.OnPlayerLeft)
     NetEvents:Subscribe("Killstreak:newClient",self,self.sendConfToNewClient)
+    NetEvents:Subscribe("Killstreak:notifyServerUsedSteps",self,self.usedSteps)
 end
 
 function Killstreak:__gc()
