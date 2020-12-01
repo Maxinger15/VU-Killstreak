@@ -65,6 +65,10 @@ end)
 -- invoke this to adjust the points your killstreak costs
 -- usedStep = index you got with the Invoke event (parameter 1)
 Events:Subscribe("Killstreak:usedStep",function(usedStep)
+    converted = json.encode(inUse)
+    print("Client recievet step used")
+    print("used Step " .. tostring(usedStep))
+    print("inUse: " .. converted)
     inUse[usedStep] = false
     NetEvents:SendLocal("Killstreak:notifyServerUsedSteps",usedStep,PlayerManager:GetLocalPlayer())
 end)

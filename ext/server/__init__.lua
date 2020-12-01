@@ -38,10 +38,10 @@ function Killstreak:OnPlayerLeft()
     return
 end
 
-function usedSteps(usedStep,player)
-    self.playerKillstreakScore[player.id] = self.playerKillstreakScore[player.id] - conf[2][usedStep]
-    print("Player " .. tostring(player.name) .. " used Killstreaknr. "..tostring(usedStep) .." and a new KillStreak-Score: " .. tostring(self.playerKillstreakScore[player.id]))
-    NetEvents:SendTo("Killstreak:ScoreUpdate",player,tostring(self.playerKillstreakScore[player.id]))
+function Killstreak:usedSteps(playerObj,usedStep)
+    self.playerKillstreakScore[playerObj.id] = self.playerKillstreakScore[playerObj.id] - conf[3][usedStep]
+    print("Player " .. tostring(playerObj.name) .. " used Killstreaknr. "..tostring(usedStep) .." and a new KillStreak-Score: " .. tostring(self.playerKillstreakScore[playerObj.id]))
+    NetEvents:SendTo("Killstreak:ScoreUpdate",playerObj,tostring(self.playerKillstreakScore[playerObj.id]))
 end
 
 function Killstreak:OnPlayerUpdate(player, deltaTime)
