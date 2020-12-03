@@ -1,3 +1,11 @@
+@font-face {
+  font-family: battlefield3;
+  src: url(./font/bebas.ttf);
+}
+@font-face {
+  font-family: bf3Better;
+  src: url(./font/bffont.ttf);
+}
 .overallBackground{
   background-color: transparent;
   
@@ -19,4 +27,46 @@
 }
 .ant-steps-item-container{
   padding-bottom: 5%;
+}
+.ant-steps-item .ant-steps-item-content{
+  position: relative;
+  top: -15px;
+}
+.ant-steps-item-finish .ant-steps-item-icon {
+  background: rgba(0,128,0,0.6);
+  border-color: rgba(0,128,0,0.6);
+}
+
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
+  background: rgba(255, 204, 0,0.5);
+  border-color: rgba(255, 204, 0,0.5);
+}
+
+.ant-steps-item-wait .ant-steps-item-icon {
+  background: rgba(255, 0, 0,0.4);
+  border-color: rgba(255, 0, 0,0.4);
+}
+.ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon{
+  color: white;
+}
+.anticon{
+  color: white;
+}
+.ant-progress-inner:not(.ant-progress-circle-gradient) .ant-progress-circle-path{
+  stroke:  rgba(5, 57, 97,1);
+}
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after{
+  background-color:  rgba(5, 57, 97,1);
+}
+.ant-steps-vertical > .ant-steps-item > .ant-steps-item-container > .ant-steps-item-tail {
+  left:15px
+}
+.ant-steps-vertical > .ant-steps-item > .ant-steps-item-container > .ant-steps-item-tail::after{
+  width: 2px;
+}
+.ant-steps-item-icon{
+  font-family: bf3Better;
+}
+.ant-steps-item-icon .ant-steps-icon{
+  top: -2px;
 }
