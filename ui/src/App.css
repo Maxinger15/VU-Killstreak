@@ -33,18 +33,18 @@
   top: -15px;
 }
 .ant-steps-item-finish .ant-steps-item-icon {
-  background: rgba(0,128,0,0.6);
-  border-color: rgba(0,128,0,0.6);
+  background: rgba(0,128,0,0.5);
+  border-color: rgba(0,128,0,0.5);
 }
 
 .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
-  background: rgba(255, 204, 0,0.5);
-  border-color: rgba(255, 204, 0,0.5);
+  background:transparent;
+  border-color: transparent;
 }
 
 .ant-steps-item-wait .ant-steps-item-icon {
-  background: rgba(255, 0, 0,0.4);
-  border-color: rgba(255, 0, 0,0.4);
+  background: transparent;
+  border-color: transparent;
 }
 .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon{
   color: white;
@@ -66,6 +66,7 @@
 }
 .ant-steps-item-icon{
   font-family: bf3Better;
+  top: -1px
 }
 .ant-steps-item-icon .ant-steps-icon{
   top: -2px;

@@ -14,6 +14,10 @@ local conf  ={
         "Grenades","Health","Airstrike","AC130"
     },{
         "Left %NR","Left %NR","Left %NR","Left %NR"
+    },{
+        "F5","F6","F7","F8"
+    },{
+        "Press F to use","Press F to use","Press F to use","Press F to use"
     }
 }
 
