@@ -58,7 +58,9 @@ class Progess extends React.Component {
   componentDidMount() {
     window.addEventListener("Killstreak:UpdateScore", this.updateScoreCallback);
     window.addEventListener("Killstreak:getConfig", this.getConfigCallback);
-    this.setLayout();
+    if(process.env.NODE_ENV !== "production"){
+      this.setLayout();
+    }
   }
 
   componentWillUnmount() {

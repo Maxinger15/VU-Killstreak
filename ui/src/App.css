@@ -6,6 +6,9 @@
   font-family: bf3Better;
   src: url(./font/bffont.ttf);
 }
+*{
+  font-family: bf3Better;
+}
 .overallBackground{
   background-color: transparent;
   
