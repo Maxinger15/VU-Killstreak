@@ -5,7 +5,7 @@ import "antd/dist/antd.css";
 import "./App.css";
 import Progress from "./components/progress";
 import KsPicker from "./components/kspicker"
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Sider, Content } = Layout;
 
 class App extends React.Component {
   constructor(props) {

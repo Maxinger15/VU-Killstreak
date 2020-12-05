@@ -80,13 +80,17 @@ class Progess extends React.Component {
       if (vals[i] <= score && score < vals[i + 1]) {
         let erg = this.setCurrentStepPercentage(i, score);
         /*eslint-disable no-undef*/
-        //WebUI.Call("DispatchEvent", "Killstreak:StepUpdate", i);
+        if (process.env.NODE_ENV === "production") {
+          WebUI.Call("DispatchEvent", "Killstreak:StepUpdate", i);
+        }
         /*eslint-enable no-undef*/
         return { step: i, perc: erg };
       }
       if (i === this.state.stepValues.length - 2) {
         /*eslint-disable no-undef*/
-        //WebUI.Call('DispatchEvent', 'Killstreak:StepUpdate', i+1)
+        if (process.env.NODE_ENV === "production") {
+          WebUI.Call("DispatchEvent", "Killstreak:StepUpdate", i+1);
+        }
         /*eslint-enable no-undef*/
         let erg = this.setCurrentStepPercentage(i + 1, score);
         return { step: i + 1, perc: erg };
