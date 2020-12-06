@@ -34,8 +34,9 @@ function Killstreak:sendConfToNewClient(player)
     NetEvents:SendTo("Killstreak:Client:getConf",player,json.encode(conf))
 end
 
-function Killstreak:updatePlayerKS(player,ks)
-    print("player killstreaks: ".. ks)
+function Killstreak:updatePlayerKS(ks,player)
+    print("test 2")
+    print(ks)
     if ks ~= nil then
         
         self.playerKillstreaks[player.id] = json.decode(ks)

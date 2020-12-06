@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout,Button } from "antd";
+import { Layout, Button } from "antd";
 
 import "antd/dist/antd.css";
 import "./App.css";
@@ -13,13 +13,16 @@ class App extends React.Component {
     this.state = {
       ksPickerVisible: false,
       allKillstreaks: [],
-      selectedKillstreaks: []
+      selectedKillstreaks: [],
+      showKsButton: true,
     };
     this.toggle = this.toggle.bind(this);
-    this.getAllKillstreaks = this.getAllKillstreaks.bind(this)
-    this.showUi = this.showUi.bind(this)
-    this.hideUi = this.hideUi.bind(this)
-    this.onSelectedChange = this.onSelectedChange.bind(this)
+    this.getAllKillstreaks = this.getAllKillstreaks.bind(this);
+    this.showUi = this.showUi.bind(this);
+    this.hideUi = this.hideUi.bind(this);
+    this.onSelectedChange = this.onSelectedChange.bind(this);
+    this.showKsButton = this.showKsButton.bind(this);
+    this.hideKsButton = this.hideKsButton.bind(this);
   }
   getTestData() {
     return [
@@ -109,83 +112,140 @@ class App extends React.Component {
 
   toggle(e) {
     var key = e.which;
-    if (key === 69) {
+    if (key === 27) {
       this.setState(
         {
-          ksPickerVisible: !this.state.ksPickerVisible,
-        },
-        () => {
-          console.log(this.state.ksPickerVisible);
+          ksPickerVisible: false,
+        }
+      );
+    }
+    if (key === 75) {
+      this.setState(
+        {
+          ksPickerVisible: true,
         }
       );
     }
   }
 
-  getAllKillstreaks(e){
-    console.log("ks Event",JSON.parse(e.detail))
+  getAllKillstreaks(e) {
+    console.log("ks Event", JSON.parse(e.detail));
     this.setState({
-      allKillstreaks: JSON.parse(e.detail)
-    })
+      allKillstreaks: JSON.parse(e.detail),
+    });
   }
-  showUi(){
+  showUi() {
     this.setState({
-      ksPickerVisible : true,
-    })
+      ksPickerVisible: true,
+    });
   }
-  hideUi(){
+  hideUi() {
     this.setState({
-      ksPickerVisible: false
-    })
+      ksPickerVisible: false,
+    });
+  }
+  showKsButton() {
+    this.setState({
+      showKsButton: true,
+    });
+  }
+  hideKsButton() {
+    this.setState({
+      showKsButton: false,
+    });
   }
 
   componentDidMount() {
-    if(process.env.NODE_ENV !== "production"){
-      document.addEventListener("keydown", this.toggle, false);
+    if (process.env.NODE_ENV !== "production") {
       this.setState({
-        allKillstreaks: this.getTestData()
-      })
+        allKillstreaks: this.getTestData(),
+      });
     }
-    
-    document.addEventListener("Killstreak:UI:getAllKillstreaks", this.getAllKillstreaks, false)
-    document.addEventListener("Killstreak:UI:showSelectScreen", this.showUi, false)
-    document.addEventListener("Killstreak:UI:hideSelectScreen", this.hideUi, false)
-    
+    document.addEventListener("keydown", this.toggle, false);
+    document.addEventListener(
+      "Killstreak:UI:getAllKillstreaks",
+      this.getAllKillstreaks,
+      false
+    );
+    document.addEventListener(
+      "Killstreak:UI:showSelectScreen",
+      this.showUi,
+      false
+    );
+    document.addEventListener(
+      "Killstreak:UI:hideSelectScreen",
+      this.hideUi,
+      false
+    );
+    document.addEventListener(
+      "Killstreak:UI:showKsButton",
+      this.showKsButton,
+      false
+    );
+    document.addEventListener(
+      "Killstreak:UI:hideKsButton",
+      this.hideKsButton,
+      false
+    );
   }
   componentWillUnmount() {
-    if(process.env.NODE_ENV !== "production"){
-      document.removeEventListener("keydown", this.toggle, false);
-    }
     document.removeEventListener("keydown", this.toggle, false);
-    document.removeEventListener("Killstreak:UI:getAllKillstreaks",this.getAllKillstreaks, false)
-    document.removeEventListener("Killstreak:UI:showSelectScreen", this.showUi, false)
-    document.removeEventListener("Killstreak:UI:hideSelectScreen", this.hideUi, false)
+    document.removeEventListener(
+      "Killstreak:UI:getAllKillstreaks",
+      this.getAllKillstreaks,
+      false
+    );
+    document.removeEventListener(
+      "Killstreak:UI:showSelectScreen",
+      this.showUi,
+      false
+    );
+    document.removeEventListener(
+      "Killstreak:UI:hideSelectScreen",
+      this.hideUi,
+      false
+    );
+    document.removeEventListener(
+      "Killstreak:UI:showKsButton",
+      this.showKsButton,
+      false
+    );
+    document.removeEventListener(
+      "Killstreak:UI:hideKsButton",
+      this.hideKsButton,
+      false
+    );
   }
-  onSelectedChange(newValues){
-    console.log("new Values",newValues)
-    let orig = []
-    newValues.forEach(el =>{
-      orig.push(el.original)
-    })
+  onSelectedChange(newValues) {
+    console.log("new Values", newValues);
+    let orig = [];
+    newValues.forEach((el) => {
+      orig.push(el.original);
+    });
     /*eslint-disable no-undef*/
     if (process.env.NODE_ENV === "production") {
-      WebUI.Call("DispatchEvent", "Killstreak:selectedKillstreaks", JSON.stringify(orig));
+      WebUI.Call(
+        "DispatchEvent",
+        "Killstreak:selectedKillstreaks",
+        JSON.stringify(orig)
+      );
     }
     /*eslint-enable no-undef*/
     this.setState({
-      selectedKillstreaks : newValues
-    })
+      selectedKillstreaks: newValues,
+    });
   }
 
-  getOriginalLayoutArray(old){
+  getOriginalLayoutArray(old) {
     let newArr = [];
-    old.forEach(element => {
-       newArr.push(element.original)
+    old.forEach((element) => {
+      newArr.push(element.original);
     });
     return newArr;
   }
 
   render() {
-    console.log(this.state)
+    console.log(this.state);
     return (
       <>
         <Layout style={{ height: "100vh" }} className={"overallBackground"}>
@@ -193,7 +253,9 @@ class App extends React.Component {
           <Layout>
             <Sider className={"overallBackground"} width="30%">
               <Progress
-                layout={ this.getOriginalLayoutArray(this.state.selectedKillstreaks)}
+                layout={this.getOriginalLayoutArray(
+                  this.state.selectedKillstreaks
+                )}
                 className={"overallBackground"}
                 style={{
                   height: "100%",
@@ -217,7 +279,6 @@ class App extends React.Component {
               background: "rgba(58, 42, 45, 0.65)",
               top: "0px",
               left: "0px",
-
             }}
           >
             <div
@@ -229,13 +290,21 @@ class App extends React.Component {
                 left: "25%",
               }}
             >
-              <KsPicker killstreaks={this.state.allKillstreaks} selectedKillstreaks={this.state.selectedKillstreaks} onChange={(newValues)=>{this.onSelectedChange(newValues)}} onCloseButton={this.hideUi}/>
+              <KsPicker
+                killstreaks={this.state.allKillstreaks}
+                selectedKillstreaks={this.state.selectedKillstreaks}
+                onChange={(newValues) => {
+                  this.onSelectedChange(newValues);
+                }}
+                onCloseButton={this.hideUi}
+              />
             </div>
           </div>
-        ) : 
-        <Button type="ghost" onClick={this.showUi} className="ksButton">Killstreaks</Button>
-        
-        }
+        ) : this.state.showKsButton ? (
+          <Button type="ghost" onClick={this.showUi} className="ksButton">
+            Killstreaks
+          </Button>
+        ) : null}
       </>
     );
   }

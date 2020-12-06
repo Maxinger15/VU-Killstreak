@@ -19,63 +19,94 @@ Events:Subscribe(
     end
 )
 Events:Subscribe(
+    "Level:Loaded",
+    function(levelName, gameMode)
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+    end
+)
+
+Events:Subscribe(
+    "Level:Finalized",
+    function(levelName, gameMode)
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideKsButton"))')
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideSelectScreen"))')
+    end
+)
+
+Events:Subscribe(
+    "Player:Killed",
+    function(player)
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+    end
+)
+
+Events:Subscribe(
+    "Player:Respawn",
+    function(player)
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideKsButton"))')
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideSelectScreen"))')
+    end
+)
+
+Events:Subscribe(
     "Killstreak:selectedKillstreaks",
     function(ks)
-        print("ks " .. ks)
-        NetEvents:Send("Killstreak:updatePlayerKS",PlayerManager:GetLocalPlayer(),ks)  
-     decodeKs = json.decode(ks)
-     selectedKillstreaks = decodeKs
-      
+        test = json.encode(ks)
+        print("ks test " .. test)
+        NetEvents:SendLocal("Killstreak:updatePlayerKS", test ,PlayerManager:GetLocalPlayer())
+        decodeKs = json.decode(ks)
+        selectedKillstreaks = decodeKs
     end
 )
 -- Your mod get the following parameters in the Invoke Event:
 -- 1. Position of Killstreak 1-4
 -- 2. Key who toggle the Killstreak
 Events:Subscribe(
-        "Client:UpdateInput",
-        function(delta)
-            if selectedKillstreaks == nil  then
-                return
-            end
-            for i, v in pairs(selectedKillstreaks) do
-                if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false and newEvent == true then
-                    if i + 1 <= step then
-                        print("Activate")
-                        newEvent = false
-                        print("Dispatched event " .. tostring(selectedKillstreaks[i][1]))
-                        inUse[i] = true
-                        Events:Dispatch(selectedKillstreaks[i][1] .. ":Invoke", i, tonumber(v))
-                        return
-                    end
-                end
-                if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == true and newEvent == true then
-                    print("Disable")
-                    Events:Dispatch(selectedKillstreaks[i][1] .. ":Disable", i)
-                    inUse[i] = false
+    "Client:UpdateInput",
+    function(delta)
+        if selectedKillstreaks == nil then
+            return
+        end
+        for i, v in pairs(selectedKillstreaks) do
+            if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false and newEvent == true then
+                if i + 1 <= step then
+                    print("Activate")
                     newEvent = false
+                    print("Dispatched event " .. tostring(selectedKillstreaks[i][1]))
+                    inUse[i] = true
+                    Events:Dispatch(selectedKillstreaks[i][1] .. ":Invoke", i, tonumber(v))
                     return
                 end
-                if InputManager:WentKeyUp(tonumber(bindings[i])) == false and newEvent == false then
-                    --if curKeyUpEvents >= keyUpThreshold then
-                        print("New Event")
-                        newEvent = true
-                       -- curKeyUpEvents = 0
-                    --else
-                       -- curKeyUpEvents = curKeyUpEvents + 1
-                    --end
-                end
+            end
+            if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == true and newEvent == true then
+                print("Disable")
+                Events:Dispatch(selectedKillstreaks[i][1] .. ":Disable", i)
+                inUse[i] = false
+                newEvent = false
+                return
+            end
+            if InputManager:WentKeyUp(tonumber(bindings[i])) == false and newEvent == false then
+                --if curKeyUpEvents >= keyUpThreshold then
+                print("New Event")
+                newEvent = true
+            -- curKeyUpEvents = 0
+            --else
+            -- curKeyUpEvents = curKeyUpEvents + 1
+            --end
             end
         end
-    )
+    end
+)
 
 function getConf(config)
     print("Get conf " .. config)
     confResend = json.encode(config)
     WebUI:Init()
-    WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UI:getAllKillstreaks",{detail:' .. confResend .. "}))")
+    WebUI:ExecuteJS(
+        'document.dispatchEvent(new CustomEvent("Killstreak:UI:getAllKillstreaks",{detail:' .. confResend .. "}))"
+    )
     WebUI:Show()
     config = json.decode(config)
-    
 end
 
 NetEvents:Subscribe(
