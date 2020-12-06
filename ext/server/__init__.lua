@@ -1,15 +1,18 @@
 local conf = require("configuration.lua")
+
 class 'Killstreak'
 
 function Killstreak:__init()
     print("Initializing server module")
     self.playerScores = {}
     self.playerKillstreakScore = {}
+    self.playerKillstreaks = {}
     Events:Subscribe('Level:Loaded', self, self.OnLoad)
     Events:Subscribe('Level:Destroy', self, self.ResetState)
     Events:Subscribe('Player:Left', self, self.OnPlayerLeft)
     NetEvents:Subscribe("Killstreak:newClient",self,self.sendConfToNewClient)
     NetEvents:Subscribe("Killstreak:notifyServerUsedSteps",self,self.usedSteps)
+    NetEvents:Subscribe("Killstreak:updatePlayerKS",self,self.updatePlayerKS)
 end
 
 function Killstreak:__gc()
@@ -27,7 +30,17 @@ end
 
 function Killstreak:sendConfToNewClient(player)
     print("New Player "..player.name.. "with conf "..json.encode(conf) )
+    self.playerKillstreaks[player.id] = {}
     NetEvents:SendTo("Killstreak:Client:getConf",player,json.encode(conf))
+end
+
+function Killstreak:updatePlayerKS(player,ks)
+    print("player killstreaks: ".. ks)
+    if ks ~= nil then
+        
+        self.playerKillstreaks[player.id] = json.decode(ks)
+    end
+    
 end
 function Killstreak:ResetState()
     self.playerKillstreakScore = {}
@@ -39,7 +52,8 @@ function Killstreak:OnPlayerLeft()
 end
 
 function Killstreak:usedSteps(playerObj,usedStep)
-    self.playerKillstreakScore[playerObj.id] = self.playerKillstreakScore[playerObj.id] - conf[3][usedStep]
+    print("cost: ".. tostring(self.playerKillstreaks[playerObj.id][usedStep][3]))
+    self.playerKillstreakScore[playerObj.id] = self.playerKillstreakScore[playerObj.id] - self.playerKillstreaks[playerObj.id][usedStep][3]
     print("Player " .. tostring(playerObj.name) .. " used Killstreaknr. "..tostring(usedStep) .." and a new KillStreak-Score: " .. tostring(self.playerKillstreakScore[playerObj.id]))
     NetEvents:SendTo("Killstreak:ScoreUpdate",playerObj,tostring(self.playerKillstreakScore[playerObj.id]))
 end

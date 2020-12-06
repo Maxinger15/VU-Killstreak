@@ -1,107 +1,29 @@
 import React from "react";
 import { List, Card, Button, Row, Col } from "antd";
-import { PlusOutlined, CheckCircleOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  CheckCircleOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 export default class KsPicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      options: [],
-      selected: [],
+      options: this.convertLayoutToCards(this.props.killstreaks),
+      selected: this.props.selectedKillstreaks,
       maxKillstreaks: 4,
     };
     this.toggleItem = this.toggleItem.bind(this);
   }
-  componentDidMount() {
-    if (process.env.NODE_ENV !== "production") {
-      this.setState({
-        options: this.convertLayoutToCards(this.getTestData()),
-      });
-    }
-  }
-  getTestData() {
-    return [
-      [
-        "vu-artillerystrike",
-        65,
-        150,
-        "Grenades",
-        "Left %NR",
-        "F5",
-        "Press F to use",
-      ],
-      [
-        "vu-artillerystrike",
-        65,
-        250,
-        "Health",
-        "Left %NR",
-        "F5",
-        "Press F to use",
-      ],
-      [
-        "vu-artillerystrike",
-        65,
-        350,
-        "Ac130",
-        "Left %NR",
-        "F5",
-        "Press F to use",
-      ],
-      [
-        "vu-artillerystrike",
-        65,
-        450,
-        "Tactical Missle",
-        "Left %NR",
-        "F5",
-        "Press F to use",
-      ],
-      [
-        "vu-artillerystrike",
-        65,
-        550,
-        "Big big boom",
-        "Left %NR",
-        "F5",
-        "Press F to use",
-      ],
-      [
-        "vu-artillerystrike",
-        65,
-        650,
-        "low boom",
-        "Left %NR",
-        "F5",
-        "Press F to use",
-      ],
-      [
-        "vu-artillerystrike",
-        65,
-        750,
-        "walking speed increase",
-        "Left %NR",
-        "F5",
-        "Press F to use",
-      ],
-      [
-        "vu-artillerystrike",
-        65,
-        850,
-        "more health",
-        "Left %NR",
-        "F5",
-        "Press F to use",
-      ],
-      [
-        "vu-artillerystrike",
-        65,
-        850,
-        "more health",
-        "Left %NR",
-        "F5",
-        "Press F to use",
-      ],
-    ];
+
+  checkIfSeleted(element) {
+    let found = false;
+    this.props.selectedKillstreaks.forEach((el) => {
+      if (JSON.stringify(el.original) === JSON.stringify(element)) {
+        found = true;
+      }
+    });
+    return found;
   }
 
   convertLayoutToCards(values) {
@@ -110,58 +32,89 @@ export default class KsPicker extends React.Component {
       newList.push({
         title: element[3],
         description: "Points: " + element[2],
-        id: index,
-        selected: false,
+        selected: this.checkIfSeleted(element),
+        original: element,
       });
     });
     return newList;
   }
+
+  convertCardToLayout(cards) {
+    let old = [];
+    cards.forEach((el) => {
+      old.push(el.original);
+    });
+    return old;
+  }
+
+  compare(a, b) {
+    if (a.original[2] < b.original[2]) {
+      return -1;
+    }
+    if (a.original[2] > b.original[2]) {
+      return 1;
+    }
+    return 0;
+  }
+
   toggleItem(itm) {
-    if (this.state.selected.length >= this.state.maxKillstreaks) {
+    if (this.props.selectedKillstreaks.length >= this.state.maxKillstreaks) {
       let newSelected = [];
-      this.state.selected.forEach((element) => {
-        if (itm.id !== element.id) {
+      this.props.selectedKillstreaks.forEach((element) => {
+        if (itm.title !== element.title) {
           newSelected.push(element);
         } else {
           itm.selected = false;
         }
       });
-      if (newSelected.length !== this.state.selected) {
+      if (newSelected.length !== this.props.selectedKillstreaks) {
+        newSelected.sort(this.compare);
         this.setState({
           selected: newSelected,
         });
+        this.props.onChange(newSelected);
         return;
       }
     }
-    if (this.state.selected.length >= this.state.maxKillstreaks) {
+    if (this.props.selectedKillstreaks.length >= this.state.maxKillstreaks) {
       return;
     }
     let newSelected = [];
-    this.state.selected.forEach((element) => {
-      if (itm.id !== element.id) {
+    this.props.selectedKillstreaks.forEach((element) => {
+      if (itm.title !== element.title) {
         newSelected.push(element);
       } else {
         itm.selected = false;
       }
     });
-    if (newSelected.length === this.state.selected.length) {
+    if (newSelected.length === this.props.selectedKillstreaks.length) {
       itm.selected = true;
       newSelected.push(itm);
     }
+    newSelected.sort(this.compare);
     this.setState({
       selected: newSelected,
     });
+    this.props.onChange(newSelected);
     return;
   }
 
   render() {
+    console.log(this.state.options);
     return (
       <div>
-        <Row style={{fontSize : "16px",fontWeight:"bolder",color:"white"}}>
-          <Col span={12}>Select your Killstreaks</Col>
-          <Col span={12} >
-            <div style={{textAlign:"right"}} >
-              {this.state.selected.length + "/" + this.state.maxKillstreaks}
+        <Row style={{ fontSize: "16px", fontWeight: "bolder", color: "white",borderBottom:" 1.5px solid white",marginBottom:"5px" }}>
+          <Col span={8}>Select your Killstreaks</Col>
+          <Col span={8}>
+            <div style={{ textAlign: "center" }}>
+              {this.props.selectedKillstreaks.length +
+                "/" +
+                this.state.maxKillstreaks}
+            </div>
+          </Col>
+          <Col span={8}>
+            <div style={{ textAlign: "right" }}>
+              <Button type="ghost" shape="circle" style={{ border: "0px" }} icon={<CloseOutlined />} onClick={this.props.onCloseButton}></Button>
             </div>
           </Col>
         </Row>
@@ -193,7 +146,7 @@ export default class KsPicker extends React.Component {
                       textAlign: "center",
                       paddingLeft: "4px",
                       paddingRight: "4px",
-                      fontWeight:"bold"
+                      fontWeight: "bold",
                     }}
                     bodyStyle={{
                       textAlign: "center",
@@ -213,9 +166,11 @@ export default class KsPicker extends React.Component {
                           shape="circle"
                           icon={
                             itm.selected ? (
-                              <CheckCircleOutlined style={{color:"#3bc406"}}/>
+                              <CheckCircleOutlined
+                                style={{ color: "#3bc406" }}
+                              />
                             ) : (
-                              <PlusOutlined style={{color:"white"}} />
+                              <PlusOutlined style={{ color: "white" }} />
                             )
                           }
                           onClick={() => {

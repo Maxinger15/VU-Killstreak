@@ -10,7 +10,6 @@ class Progess extends React.Component {
       stepValues: layout[2],
       curStep: 0,
       curPercentage: 0,
-      layout: [[], [], [], [], []],
       configLoaded: false,
     };
   }
@@ -19,18 +18,42 @@ class Progess extends React.Component {
     window.dispatchEvent(
       new CustomEvent("Killstreak:getConfig", {
         detail: JSON.stringify([
-          ["vu-artillerystrike", "vu-ac130", "vu-artystrike", "vu-ac130"],
-          [65, 66, 67, 68],
-          [150, 250, 350, 450],
-          ["Grenades", "Health", "Airstrike", "AC130"],
-          ["Left %NR", "Left %NR", "Left %NR", "Left %NR"],
-          ["F5", "F6", "F7", "F8"],
           [
-            "Press F to use",
-            "Press F to use",
-            "Press F to use",
+            "vu-artillerystrike",
+            65,
+            150,
+            "Grenades",
+            "Left %NR",
+            "F5",
             "Press F to use",
           ],
+          [
+            "vu-artillerystrike",
+            65,
+            250,
+            "Health",
+            "Left %NR",
+            "F5",
+            "Press F to use",
+          ],
+          [
+            "vu-artillerystrike",
+            65,
+            350,
+            "Ac130",
+            "Left %NR",
+            "F5",
+            "Press F to use",
+          ],
+          [
+            "vu-artillerystrike",
+            65,
+            450,
+            "Tactical Missle",
+            "Left %NR",
+            "F5",
+            "Press F to use",
+          ]
         ]),
       })
     );
@@ -44,22 +67,11 @@ class Progess extends React.Component {
       curPercentage: perc,
     });
   };
-  getConfigCallback = (e) => {
-    console.log(e);
-    let layout = JSON.parse(e.detail);
-    let steps = [0].concat(layout[2]);
-    this.setState({
-      stepValues: steps,
-      layout: layout,
-      configLoaded: true,
-    });
-  };
 
   componentDidMount() {
     window.addEventListener("Killstreak:UpdateScore", this.updateScoreCallback);
-    window.addEventListener("Killstreak:getConfig", this.getConfigCallback);
-    if(process.env.NODE_ENV !== "production"){
-      this.setLayout();
+    if (process.env.NODE_ENV !== "production") {
+      //this.setLayout();
     }
   }
 
@@ -68,11 +80,10 @@ class Progess extends React.Component {
       "Killstreak:UpdateScore",
       this.updateScoreCallback
     );
-    window.removeEventListener("Killstreak:getConfig", this.getConfigCallback);
   }
 
   setCurrentStep(score) {
-    if (!this.state.configLoaded) {
+    if (this.props.layout.length === 0) {
       return { step: 0, perc: 0 };
     }
     let vals = this.state.stepValues;
@@ -89,7 +100,7 @@ class Progess extends React.Component {
       if (i === this.state.stepValues.length - 2) {
         /*eslint-disable no-undef*/
         if (process.env.NODE_ENV === "production") {
-          WebUI.Call("DispatchEvent", "Killstreak:StepUpdate", i+1);
+          WebUI.Call("DispatchEvent", "Killstreak:StepUpdate", i + 1);
         }
         /*eslint-enable no-undef*/
         let erg = this.setCurrentStepPercentage(i + 1, score);
@@ -104,21 +115,21 @@ class Progess extends React.Component {
     }
     return parseInt((score * 100) / this.state.stepValues[curStep + 1]);
   }
-  createDiscription(el, cost) {
-    let str = el;
+  createDiscription(el) {
+    let str = el[4];
     if (str == undefined) {
       return "";
     }
-    let erg = cost - this.state.score;
+    let erg = el[2] - this.state.score;
     //Hier kann Use It Animation eingefügt werden
     if (erg <= 0) {
       erg = 0;
-      return this.state.layout[6][0];
+      return el[6];
     }
     return str.replace("%NR", erg);
   }
 
-  getIcon(index) {
+  getIcon(el,index) {
     if (this.state.curStep < index) {
       return (
         <div className={"ant-steps-item-icon"}>
@@ -126,7 +137,7 @@ class Progess extends React.Component {
             className="ant-steps-icon"
             style={{ height: "100%", top: "5px" }}
           >
-            <span style={{ top: "-2px" }}>{this.state.layout[5][index]}</span>
+            <span style={{ top: "-2px" }}>{el[5]}</span>
           </div>
         </div>
       );
@@ -138,20 +149,20 @@ class Progess extends React.Component {
             style={{ height: "100%", top: "6px" }}
           >
             <span style={{ color: "white" }}>
-              {this.state.layout[5][index]}
+              {el[5]}
             </span>
           </div>
         </div>
       );
     } else {
-      return <span>{this.state.layout[5][index]}</span>;
+      return <span>{el[5]}</span>;
     }
   }
 
   render() {
     return (
       <div style={this.props.style} className={this.props.className}>
-        {this.state.configLoaded && (
+        {this.props.layout.length > 0 && (
           <div
             style={{
               position: "absolute",
@@ -178,15 +189,14 @@ class Progess extends React.Component {
             fontWeight: "100",
           }}
         >
-          {this.state.layout[3].map((el, index) => {
+          {this.props.layout.map((el, index) => {
             return (
               <Step
-                icon={this.getIcon(index)}
+                icon={this.getIcon(el,index)}
                 key={index}
-                title={this.state.layout[3][index]}
+                title={el[3]}
                 description={this.createDiscription(
-                  this.state.layout[4][index],
-                  this.state.layout[2][index]
+                  el
                 )}
                 style={{ color: "white" }}
               />
