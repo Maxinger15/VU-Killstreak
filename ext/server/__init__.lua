@@ -34,13 +34,9 @@ function Killstreak:sendConfToNewClient(player)
     NetEvents:SendTo("Killstreak:Client:getConf",player,json.encode(conf))
 end
 
-function Killstreak:updatePlayerKS(ks,player)
-    print("test 2")
-    print(ks)
-    if ks ~= nil then
-        
-        self.playerKillstreaks[player.id] = json.decode(ks)
-    end
+function Killstreak:updatePlayerKS(player,ks)
+    print(json.encode(ks))
+    self.playerKillstreaks[player.id] = ks
     
 end
 function Killstreak:ResetState()
@@ -48,11 +44,14 @@ function Killstreak:ResetState()
     self.playerScores = {}
 end
 
-function Killstreak:OnPlayerLeft()
+function Killstreak:OnPlayerLeft(player)
+    self.playerKillstreaks[player.id] = nil
     return
 end
 
 function Killstreak:usedSteps(playerObj,usedStep)
+    print("used: " .. tostring(usedStep))
+    print("p ks" .. json.encode(self.playerKillstreaks[playerObj.id]))
     print("cost: ".. tostring(self.playerKillstreaks[playerObj.id][usedStep][3]))
     self.playerKillstreakScore[playerObj.id] = self.playerKillstreakScore[playerObj.id] - self.playerKillstreaks[playerObj.id][usedStep][3]
     print("Player " .. tostring(playerObj.name) .. " used Killstreaknr. "..tostring(usedStep) .." and a new KillStreak-Score: " .. tostring(self.playerKillstreakScore[playerObj.id]))

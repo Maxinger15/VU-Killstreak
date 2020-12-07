@@ -1,13 +1,11 @@
 import React from "react";
 import { Steps } from "antd";
-import layout from "../layout/layoutTest";
 const { Step } = Steps;
 class Progess extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       score: 0,
-      stepValues: layout[2],
       curStep: 0,
       curPercentage: 0,
       configLoaded: false,
@@ -83,11 +81,12 @@ class Progess extends React.Component {
   }
 
   setCurrentStep(score) {
+    console.log("layout",this.props.layout)
     if (this.props.layout.length === 0) {
       return { step: 0, perc: 0 };
     }
-    let vals = this.state.stepValues;
-    for (let i = 0; i < this.state.stepValues.length - 1; i++) {
+    let vals = this.props.layout[2];
+    for (let i = 0; i < this.props.layout[2].length - 1; i++) {
       if (vals[i] <= score && score < vals[i + 1]) {
         let erg = this.setCurrentStepPercentage(i, score);
         /*eslint-disable no-undef*/
@@ -97,7 +96,7 @@ class Progess extends React.Component {
         /*eslint-enable no-undef*/
         return { step: i, perc: erg };
       }
-      if (i === this.state.stepValues.length - 2) {
+      if (i === this.props.layout[2].length - 2) {
         /*eslint-disable no-undef*/
         if (process.env.NODE_ENV === "production") {
           WebUI.Call("DispatchEvent", "Killstreak:StepUpdate", i + 1);
@@ -110,10 +109,10 @@ class Progess extends React.Component {
   }
 
   setCurrentStepPercentage(curStep, score) {
-    if (curStep + 1 > this.state.stepValues.length - 1) {
+    if (curStep + 1 > this.props.layout[2].length - 1) {
       return 100;
     }
-    return parseInt((score * 100) / this.state.stepValues[curStep + 1]);
+    return parseInt((score * 100) / this.props.layout[2][curStep + 1]);
   }
   createDiscription(el) {
     let str = el[4];

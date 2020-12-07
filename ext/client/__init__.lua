@@ -53,7 +53,7 @@ Events:Subscribe(
     function(ks)
         test = json.encode(ks)
         print("ks test " .. test)
-        NetEvents:SendLocal("Killstreak:updatePlayerKS", test ,PlayerManager:GetLocalPlayer())
+        NetEvents:SendLocal("Killstreak:updatePlayerKS",  json.decode(ks) )
         decodeKs = json.decode(ks)
         selectedKillstreaks = decodeKs
     end
@@ -69,7 +69,7 @@ Events:Subscribe(
         end
         for i, v in pairs(selectedKillstreaks) do
             if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false and newEvent == true then
-                if i + 1 <= step then
+                if i  <= step then
                     print("Activate")
                     newEvent = false
                     print("Dispatched event " .. tostring(selectedKillstreaks[i][1]))
@@ -122,10 +122,20 @@ NetEvents:Subscribe(
             if i == count then
                 break
             end
-            if selectedKillstreaks[i][3] <= data and data < selectedKillstreaks[i + 1][3] then
-                print("New Step " .. tostring(i))
-                step = i
-                break
+            if i == 1 then
+                print(tostring(selectedKillstreaks[i][3]) .. " | " .. tostring(data))
+                if selectedKillstreaks[i][3] <= data then
+                    print("New Step " .. tostring(i))
+                    step = i
+                    break
+                end
+            else
+                print(tostring(selectedKillstreaks[i][3]) .. " | " .. tostring(data) .. " | " .. tostring(selectedKillstreaks[i + 1][3]) )
+                if selectedKillstreaks[i][3] >= data and data < selectedKillstreaks[i + 1][3] then
+                    print("New Step " .. tostring(i))
+                    step = i
+                    break
+                end
             end
         end
         WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')
@@ -148,6 +158,6 @@ Events:Subscribe(
         print("used Step " .. tostring(usedStep))
         print("inUse: " .. converted)
         inUse[usedStep] = false
-        NetEvents:SendLocal("Killstreak:notifyServerUsedSteps", usedStep, PlayerManager:GetLocalPlayer())
+        NetEvents:SendLocal("Killstreak:notifyServerUsedSteps", usedStep)
     end
 )
