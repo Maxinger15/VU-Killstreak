@@ -58,11 +58,13 @@ class Progess extends React.Component {
   }
 
   updateScoreCallback = (e) => {
+    if(e.detail < 0){
+      e.detail = 0
+    }
     let { step, perc } = this.setCurrentStep(e.detail);
+    console.log(step,perc)
     this.setState({
-      score: e.detail,
-      curStep: step,
-      curPercentage: perc,
+      score: e.detail
     });
   };
 
@@ -85,34 +87,47 @@ class Progess extends React.Component {
     if (this.props.layout.length === 0) {
       return { step: 0, perc: 0 };
     }
-    let vals = this.props.layout[2];
-    for (let i = 0; i < this.props.layout[2].length - 1; i++) {
+    let vals = [0];
+    this.props.layout.forEach(el =>{
+      vals.push(el[2])
+    })
+    for (let i = 0; i < vals.length; i++) {
       if (vals[i] <= score && score < vals[i + 1]) {
-        let erg = this.setCurrentStepPercentage(i, score);
+        let used = vals[i-1] != undefined ? vals[i-1] : 0
+        let erg = this.setCurrentStepPercentage(i, score- vals[i],vals);
         /*eslint-disable no-undef*/
         if (process.env.NODE_ENV === "production") {
-          WebUI.Call("DispatchEvent", "Killstreak:StepUpdate", i);
+          //WebUI.Call("DispatchEvent", "Killstreak:StepUpdate", i);
         }
         /*eslint-enable no-undef*/
         return { step: i, perc: erg };
       }
-      if (i === this.props.layout[2].length - 2) {
+      if (i === vals.length - 1) {
         /*eslint-disable no-undef*/
         if (process.env.NODE_ENV === "production") {
-          WebUI.Call("DispatchEvent", "Killstreak:StepUpdate", i + 1);
+          //WebUI.Call("DispatchEvent", "Killstreak:StepUpdate", i + 1);
         }
         /*eslint-enable no-undef*/
-        let erg = this.setCurrentStepPercentage(i + 1, score);
-        return { step: i + 1, perc: erg };
+        if(score >= vals[i]){
+        return { step: i, perc:100 };
+        }
+        let erg = this.setCurrentStepPercentage(0, score-vals[i],vals);
+        return { step: 0, perc: erg };
       }
     }
   }
 
-  setCurrentStepPercentage(curStep, score) {
-    if (curStep + 1 > this.props.layout[2].length - 1) {
+  setCurrentStepPercentage(curStep, score,vals) {
+    if (curStep > vals.length - 1) {
       return 100;
     }
-    return parseInt((score * 100) / this.props.layout[2][curStep + 1]);
+    if(curStep > 0){
+      let erg = parseInt((score * 100) / (vals[curStep+1]-vals[curStep]));
+      return erg
+    }else{
+      return parseInt((score * 100) / vals[curStep+1]);
+    }
+    
   }
   createDiscription(el) {
     let str = el[4];
@@ -128,8 +143,8 @@ class Progess extends React.Component {
     return str.replace("%NR", erg);
   }
 
-  getIcon(el,index) {
-    if (this.state.curStep < index) {
+  getIcon(el,index,step) {
+    if (step < index) {
       return (
         <div className={"ant-steps-item-icon"}>
           <div
@@ -140,7 +155,7 @@ class Progess extends React.Component {
           </div>
         </div>
       );
-    } else if (this.state.curStep > index) {
+    } else if (step > index) {
       return (
         <div className={"ant-steps-item-icon ant-steps-item-finish"}>
           <div
@@ -159,6 +174,7 @@ class Progess extends React.Component {
   }
 
   render() {
+    let { step, perc } = this.setCurrentStep(this.state.score);
     return (
       <div style={this.props.style} className={this.props.className}>
         {this.props.layout.length > 0 && (
@@ -175,8 +191,8 @@ class Progess extends React.Component {
           </div>
         )}
         <Steps
-          current={this.state.curStep}
-          percent={this.state.curPercentage}
+          current={step}
+          percent={perc}
           direction="vertical"
           style={{
             color: "white",
@@ -191,7 +207,7 @@ class Progess extends React.Component {
           {this.props.layout.map((el, index) => {
             return (
               <Step
-                icon={this.getIcon(el,index)}
+                icon={this.getIcon(el,index,step)}
                 key={index}
                 title={el[3]}
                 description={this.createDiscription(
