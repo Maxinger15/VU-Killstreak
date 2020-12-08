@@ -114,7 +114,7 @@ export default class KsPicker extends React.Component {
           </Col>
           <Col span={8}>
             <div style={{ textAlign: "right" }}>
-              <Button type="ghost" shape="circle" style={{ border: "0px" }} icon={<CloseOutlined />} onClick={this.props.onCloseButton}></Button>
+              <Button type="ghost" style={{ border: "0px", width:"10%" }} icon={<CloseOutlined />} onClick={this.props.onCloseButton}></Button>
             </div>
           </Col>
         </Row>
@@ -159,11 +159,10 @@ export default class KsPicker extends React.Component {
                       </Col>
                     </Row>
                     <Row justify="center" align="middle">
-                      <Col>
+                      <Col span={24}>
                         <Button
                           type="ghost"
-                          style={{ border: "0px" }}
-                          shape="circle"
+                          style={{ border: "0px" ,width:"100%"}}
                           icon={
                             itm.selected ? (
                               <CheckCircleOutlined
