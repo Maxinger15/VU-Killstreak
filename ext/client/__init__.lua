@@ -120,23 +120,24 @@ NetEvents:Subscribe(
         end
         for i = 1, count, 1 do
             if i == count then
+                step = 0
                 break
             end
-            if i == 1 then
-                print(tostring(selectedKillstreaks[i][3]) .. " | " .. tostring(data))
-                if selectedKillstreaks[i][3] <= data then
-                    print("New Step " .. tostring(i))
-                    step = i
-                    break
-                end
-            else
+           -- if i == 1 then
+            --    print(tostring(selectedKillstreaks[i][3]) .. " | " .. tostring(data))
+            --    if data <= selectedKillstreaks[i][3] then
+            --        print("New Step " .. tostring(i))
+            --        step = i
+            --        break
+            --    end
+           -- else
                 print(tostring(selectedKillstreaks[i][3]) .. " | " .. tostring(data) .. " | " .. tostring(selectedKillstreaks[i + 1][3]) )
-                if selectedKillstreaks[i][3] >= data and data < selectedKillstreaks[i + 1][3] then
+                if selectedKillstreaks[i][3] <= data and data < selectedKillstreaks[i + 1][3] then
                     print("New Step " .. tostring(i))
                     step = i
                     break
                 end
-            end
+           -- end
         end
         WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')
     end

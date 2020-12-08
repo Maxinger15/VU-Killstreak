@@ -17,20 +17,22 @@ end
 
 function Killstreak:__gc()
     Events:Unsubscribe('Player:Update')
+    Events:Unsubscribe("Level:Loaded")
+    Events:Unsubscribe("Level:Destroy")
     NetEvents:Unsubscribe()
 end
 
 function Killstreak:OnLoad()
     Events:Unsubscribe('Player:Update')
-
-    self:ResetState()
     
     Events:Subscribe("Player:Update",self,self.OnPlayerUpdate)
 end
 
 function Killstreak:sendConfToNewClient(player)
     print("New Player "..player.name.. "with conf "..json.encode(conf) )
-    self.playerKillstreaks[player.id] = {}
+    if self.playerKillstreaks[player.id] == nil then
+        self.playerKillstreaks[player.id] = {}
+    end
     NetEvents:SendTo("Killstreak:Client:getConf",player,json.encode(conf))
 end
 
@@ -40,6 +42,7 @@ function Killstreak:updatePlayerKS(player,ks)
     
 end
 function Killstreak:ResetState()
+    print("reset state")
     self.playerKillstreakScore = {}
     self.playerScores = {}
 end
