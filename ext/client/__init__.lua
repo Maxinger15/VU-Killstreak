@@ -15,7 +15,9 @@ Events:Subscribe(
 Events:Subscribe(
     "Player:Connected",
     function(player)
-        NetEvents:SendLocal("Killstreak:newClient", player)
+        if player.id == PlayerManager:GetLocalPlayer().id then
+            NetEvents:SendLocal("Killstreak:newClient", player)
+        end
     end
 )
 Events:Subscribe(
@@ -36,15 +38,23 @@ Events:Subscribe(
 Events:Subscribe(
     "Player:Killed",
     function(player)
-        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+        if player.id == PlayerManager:GetLocalPlayer().id then
+            WebUI:EnableKeyboard()
+            WebUI:EnableMouse()
+            WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+        end
     end
 )
 
 Events:Subscribe(
     "Player:Respawn",
     function(player)
-        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideKsButton"))')
-        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideSelectScreen"))')
+        if player.id == PlayerManager:GetLocalPlayer().id then
+            WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideKsButton"))')
+            WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideSelectScreen"))')
+            WebUI:DisableKeyboard()
+            WebUI:DisableMouse()
+        end
     end
 )
 
@@ -106,6 +116,8 @@ function getConf(config)
         'document.dispatchEvent(new CustomEvent("Killstreak:UI:getAllKillstreaks",{detail:' .. confResend .. "}))"
     )
     WebUI:Show()
+    WebUI:DisableKeyboard()
+    WebUI:DisableMouse()
     config = json.decode(config)
 end
 

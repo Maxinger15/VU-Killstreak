@@ -119,10 +119,10 @@ class App extends React.Component {
         }
       );
     }
-    if (key === 75) {
+    if (key === 73) {
       this.setState(
         {
-          ksPickerVisible: true,
+          ksPickerVisible: !this.state.ksPickerVisible,
         }
       );
     }
