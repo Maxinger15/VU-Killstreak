@@ -1,5 +1,5 @@
 local setting = {
-    resetOnDeath = true;
+    resetOnDeath = false;
     ignoreScoreInVehicle = true;
 }
 
