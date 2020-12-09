@@ -16,6 +16,14 @@ function Killstreak:__init()
     NetEvents:Subscribe("Killstreak:notifyServerUsedSteps", self, self.usedSteps)
     NetEvents:Subscribe("Killstreak:updatePlayerKS", self, self.updatePlayerKS)
 
+    Events:Subscribe("Server:RoundOver",self, function()
+        NetEvents:Broadcast("Killstreak:hideAll")
+    end)
+
+    Events:Subscribe("Server:RoundReset",self, function()
+        NetEvents:Broadcast("Killstreak:hideAll")
+    end)
+
     if settings.resetOnDeath then
         Events:Subscribe("Player:Killed", self, self.resetScore)
     end

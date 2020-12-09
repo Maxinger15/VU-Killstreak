@@ -27,6 +27,28 @@ Events:Subscribe(
     end
 )
 
+NetEvents:Subscribe(
+    "Killstreak:hideAll",
+    function()
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideKsButton"))')
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideSelectScreen"))')
+    end
+)
+
+NetEvents:Subscribe(
+    "Killstreak:hideButton",
+    function()
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideKsButton"))')
+    end
+)
+
+NetEvents:Subscribe(
+    "Killstreak:showButton",
+    function()
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+    end
+)
+
 Events:Subscribe(
     "Level:Finalized",
     function(levelName, gameMode)
@@ -39,8 +61,6 @@ Events:Subscribe(
     "Player:Killed",
     function(player)
         if player.id == PlayerManager:GetLocalPlayer().id then
-            WebUI:EnableKeyboard()
-            WebUI:EnableMouse()
             WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
         end
     end
@@ -52,8 +72,6 @@ Events:Subscribe(
         if player.id == PlayerManager:GetLocalPlayer().id then
             WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideKsButton"))')
             WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideSelectScreen"))')
-            WebUI:DisableKeyboard()
-            WebUI:DisableMouse()
         end
     end
 )
@@ -63,7 +81,7 @@ Events:Subscribe(
     function(ks)
         test = json.encode(ks)
         print("ks test " .. test)
-        NetEvents:SendLocal("Killstreak:updatePlayerKS",  json.decode(ks) )
+        NetEvents:SendLocal("Killstreak:updatePlayerKS", json.decode(ks))
         decodeKs = json.decode(ks)
         selectedKillstreaks = decodeKs
     end
@@ -79,7 +97,7 @@ Events:Subscribe(
         end
         for i, v in pairs(selectedKillstreaks) do
             if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false and newEvent == true then
-                if i  <= step then
+                if i <= step then
                     print("Activate")
                     newEvent = false
                     print("Dispatched event " .. tostring(selectedKillstreaks[i][1]))
@@ -116,8 +134,6 @@ function getConf(config)
         'document.dispatchEvent(new CustomEvent("Killstreak:UI:getAllKillstreaks",{detail:' .. confResend .. "}))"
     )
     WebUI:Show()
-    WebUI:DisableKeyboard()
-    WebUI:DisableMouse()
     config = json.decode(config)
 end
 
@@ -135,21 +151,24 @@ NetEvents:Subscribe(
                 step = 0
                 break
             end
-           -- if i == 1 then
+            -- if i == 1 then
             --    print(tostring(selectedKillstreaks[i][3]) .. " | " .. tostring(data))
             --    if data <= selectedKillstreaks[i][3] then
             --        print("New Step " .. tostring(i))
             --        step = i
             --        break
             --    end
-           -- else
-                print(tostring(selectedKillstreaks[i][3]) .. " | " .. tostring(data) .. " | " .. tostring(selectedKillstreaks[i + 1][3]) )
-                if selectedKillstreaks[i][3] <= data and data < selectedKillstreaks[i + 1][3] then
-                    print("New Step " .. tostring(i))
-                    step = i
-                    break
-                end
-           -- end
+            -- else
+            print(
+                tostring(selectedKillstreaks[i][3]) ..
+                    " | " .. tostring(data) .. " | " .. tostring(selectedKillstreaks[i + 1][3])
+            )
+            if selectedKillstreaks[i][3] <= data and data < selectedKillstreaks[i + 1][3] then
+                print("New Step " .. tostring(i))
+                step = i
+                break
+            end
+            -- end
         end
         WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')
     end
