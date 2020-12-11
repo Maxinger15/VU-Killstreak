@@ -181,13 +181,14 @@ class Progess extends React.Component {
             style={{
               color: "white",
               fontSize: "x-large",
-              flexBasis:"100%"
+              flexBasis:"100%",
+              position:"relative",
+              left:"14%"
             }}
           >
             {this.state.score}
           </div>
         {this.props.layout.length > 0 ?
-        <div>
         <Steps
           current={step}
           percent={perc}
@@ -195,13 +196,11 @@ class Progess extends React.Component {
           style={{
             color: "white",
             transform: "scale(1.2)",
-            left: "15%",
-            top: "21%",
-            position: "relative",
-            width: "fit-content",
-            flexBasis : "100%",
+            width: "auto",
             fontWeight: "100",
-            transformOrigin:"0 0"
+            transformOrigin:"0 0",
+            marginTop:"5%",
+            marginBottom:"5%"
           }}
         >
           {this.props.layout.map((el, index) => {
@@ -213,12 +212,11 @@ class Progess extends React.Component {
                 description={this.createDiscription(
                   el
                 )}
-                style={{ color: "white" }}
+                style={{ color: "white",width:"fit-content" }}
               />
             );
           })}
         </Steps>
-        </div>
         :
         <div className="infoText"> Press the killstreak button in the spawn screen to select your killstreaks</div>
         }

@@ -268,10 +268,9 @@ class App extends React.Component {
                   display: "flex",
                   flexDirection: "row",
                   flexWrap:"wrap",
-                  alignItems: "center",
                   opacity: "0.5",
                   fontFamily: "bf3Better",
-                  textAlign:"center"
+                  left: "3%"
                 }}
               />
             </Sider>
