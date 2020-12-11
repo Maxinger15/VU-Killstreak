@@ -160,8 +160,9 @@ class App extends React.Component {
       this.setState({
         allKillstreaks: this.getTestData(),
       });
+      document.addEventListener("keydown", this.toggle, false);
     }
-    document.addEventListener("keydown", this.toggle, false);
+    
     document.addEventListener(
       "Killstreak:UI:getAllKillstreaks",
       this.getAllKillstreaks,
@@ -189,7 +190,10 @@ class App extends React.Component {
     );
   }
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.toggle, false);
+    if (process.env.NODE_ENV !== "production") {
+      document.removeEventListener("keydown", this.toggle, false);
+    }
+    
     document.removeEventListener(
       "Killstreak:UI:getAllKillstreaks",
       this.getAllKillstreaks,
@@ -256,14 +260,18 @@ class App extends React.Component {
                 layout={this.getOriginalLayoutArray(
                   this.state.selectedKillstreaks
                 )}
+                showButton={this.state.showKsButton}
+                showUi={this.showUi}
                 className={"overallBackground"}
                 style={{
-                  height: "100%",
                   position: "relative",
                   display: "flex",
+                  flexDirection: "row",
+                  flexWrap:"wrap",
                   alignItems: "center",
                   opacity: "0.5",
                   fontFamily: "bf3Better",
+                  textAlign:"center"
                 }}
               />
             </Sider>
@@ -300,10 +308,6 @@ class App extends React.Component {
               />
             </div>
           </div>
-        ) : this.state.showKsButton ? (
-          <Button type="ghost" onClick={this.showUi} className="ksButton">
-            Killstreaks
-          </Button>
         ) : null}
       </>
     );

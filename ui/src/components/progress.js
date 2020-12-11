@@ -1,5 +1,5 @@
 import React from "react";
-import { Steps } from "antd";
+import { Steps,Button } from "antd";
 const { Step } = Steps;
 class Progess extends React.Component {
   constructor(props) {
@@ -177,19 +177,17 @@ class Progess extends React.Component {
     let { step, perc } = this.setCurrentStep(this.state.score);
     return (
       <div style={this.props.style} className={this.props.className}>
-        {this.props.layout.length > 0 && (
           <div
             style={{
-              position: "absolute",
               color: "white",
-              left: "11%",
-              top: "13%",
               fontSize: "x-large",
+              flexBasis:"100%"
             }}
           >
             {this.state.score}
           </div>
-        )}
+        {this.props.layout.length > 0 ?
+        <div>
         <Steps
           current={step}
           percent={perc}
@@ -197,11 +195,13 @@ class Progess extends React.Component {
           style={{
             color: "white",
             transform: "scale(1.2)",
-            left: "5%",
+            left: "15%",
             top: "21%",
-            position: "absolute",
+            position: "relative",
             width: "fit-content",
+            flexBasis : "100%",
             fontWeight: "100",
+            transformOrigin:"0 0"
           }}
         >
           {this.props.layout.map((el, index) => {
@@ -218,6 +218,20 @@ class Progess extends React.Component {
             );
           })}
         </Steps>
+        </div>
+        :
+        <div className="infoText"> Press the killstreak button in the spawn screen to select your killstreaks</div>
+        }
+        {this.props.showButton ? 
+        <div style={{flexBasis:"100%",alignContent:"center"}}>
+          <Button type="ghost" onClick={this.props.showUi} className="ksButton">
+            Killstreaks
+        </Button>
+        </div>
+        
+        :
+        null}
+        
       </div>
     );
   }

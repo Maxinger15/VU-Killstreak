@@ -76,5 +76,12 @@
 }
 
 .ksButton{
-  position: absolute; top:31.5%; left:72%; color: white; font-family: bf3Better;
+ color: white; font-family: bf3Better;  width: 40%;margin-top: 3%;
+}
+
+.infoText{
+  color:white;
+  font-family: bf3Better;
+  flex-basis: 100%;
+  text-align: center;
 }

@@ -6,6 +6,7 @@ local newEvent = true
 local keyUpThreshold = 30
 local curKeyUpEvents = 0
 local selectedKillstreaks = nil
+local score = 0
 Events:Subscribe(
     "Extension:Loaded",
     function()
@@ -84,6 +85,7 @@ Events:Subscribe(
         NetEvents:SendLocal("Killstreak:updatePlayerKS", json.decode(ks))
         decodeKs = json.decode(ks)
         selectedKillstreaks = decodeKs
+        WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. score .. '"}))')
     end
 )
 -- Your mod get the following parameters in the Invoke Event:
@@ -134,6 +136,7 @@ function getConf(config)
         'document.dispatchEvent(new CustomEvent("Killstreak:UI:getAllKillstreaks",{detail:' .. confResend .. "}))"
     )
     WebUI:Show()
+    WebUI:DisableKeyboard()
     config = json.decode(config)
 end
 
@@ -141,9 +144,14 @@ NetEvents:Subscribe(
     "Killstreak:ScoreUpdate",
     function(data)
         data = tonumber(data)
+        score = data
         print("Got Data " .. tostring(data))
         count = 0
-        for _ in pairs(selectedKillstreaks) do
+        tempTable = {}
+        if selectedKillstreaks ~= nil then
+            tempTable = selectedKillstreaks
+        end
+        for _ in pairs(tempTable) do
             count = count + 1
         end
         for i = 1, count, 1 do
