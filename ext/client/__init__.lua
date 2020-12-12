@@ -88,6 +88,14 @@ Events:Subscribe(
         WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. score .. '"}))')
     end
 )
+-- timerObjJson: JSON string from the timer object for the frontend {duration: number,text: string}
+Events:Subscribe(
+    "Killstreak:newTimer",
+    function(timerObjJson)
+        WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UI:newTimer",{detail:"' .. timerObjJson .. '"}))')
+    end
+)
+
 -- Your mod get the following parameters in the Invoke Event:
 -- 1. Position of Killstreak 1-4
 -- 2. Key who toggle the Killstreak
