@@ -100,7 +100,6 @@ export default class KsPicker extends React.Component {
   }
 
   render() {
-    console.log(this.state.options);
     return (
       <div>
         <Row style={{ fontSize: "16px", fontWeight: "bolder", color: "white",borderBottom:" 1.5px solid white",marginBottom:"5px" }}>

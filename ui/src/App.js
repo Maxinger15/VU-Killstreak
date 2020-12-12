@@ -15,6 +15,7 @@ class App extends React.Component {
       allKillstreaks: [],
       selectedKillstreaks: [],
       showKsButton: true,
+      timers: [],
     };
     this.toggle = this.toggle.bind(this);
     this.getAllKillstreaks = this.getAllKillstreaks.bind(this);
@@ -23,7 +24,34 @@ class App extends React.Component {
     this.onSelectedChange = this.onSelectedChange.bind(this);
     this.showKsButton = this.showKsButton.bind(this);
     this.hideKsButton = this.hideKsButton.bind(this);
+    this.clearAllTimers = this.clearAllTimers.bind(this);
+    this.onTimerComplete = this.onTimerComplete.bind(this);
+    this.newTimer = this.newTimer.bind(this)
   }
+
+  clearAllTimers() {
+    this.setState({
+      timers: [],
+    });
+  }
+
+  onTimerComplete() {
+    let notFinished = false;
+    this.state.timers.forEach((element) => {
+      if (element.remaining === undefined || element.remaining > 0) {
+        notFinished = true;
+      }
+    });
+    if (!notFinished) {
+      this.clearAllTimers()
+    }else{
+      this.setState({
+        timers: this.state.timers,
+      });
+    }
+    
+  }
+
   getTestData() {
     return [
       [
@@ -113,42 +141,50 @@ class App extends React.Component {
   toggle(e) {
     var key = e.which;
     if (key === 27) {
-      this.setState(
-        {
-          ksPickerVisible: false,
-        }
-      );
+      this.setState({
+        ksPickerVisible: false,
+      });
     }
     if (key === 73) {
-      this.setState(
-        {
-          ksPickerVisible: !this.state.ksPickerVisible,
-        }
-      );
+      this.setState({
+        ksPickerVisible: !this.state.ksPickerVisible,
+      });
     }
   }
 
   getAllKillstreaks(e) {
-    console.log("ks Event", JSON.parse(e.detail));
     this.setState({
       allKillstreaks: JSON.parse(e.detail),
     });
   }
+
+  newTimer(e){
+    let timersN = this.state.timers;
+    timersN.push(JSON.parse(e.detail))
+    console.log("new List",timersN)
+    this.setState({
+      timers: timersN
+    })
+  }
+
   showUi() {
     this.setState({
       ksPickerVisible: true,
     });
   }
+
   hideUi() {
     this.setState({
       ksPickerVisible: false,
     });
   }
+
   showKsButton() {
     this.setState({
       showKsButton: true,
     });
   }
+
   hideKsButton() {
     this.setState({
       showKsButton: false,
@@ -159,10 +195,20 @@ class App extends React.Component {
     if (process.env.NODE_ENV !== "production") {
       this.setState({
         allKillstreaks: this.getTestData(),
+        timers: [
+          {
+            duration: 50000,
+            text: "test 1",
+          },
+          {
+            duration: 15,
+            text: "test 2",
+          },
+        ],
       });
       document.addEventListener("keydown", this.toggle, false);
     }
-    
+
     document.addEventListener(
       "Killstreak:UI:getAllKillstreaks",
       this.getAllKillstreaks,
@@ -188,12 +234,18 @@ class App extends React.Component {
       this.hideKsButton,
       false
     );
+    document.addEventListener(
+      "Killstreak:UI:newTimer",
+      this.newTimer,
+      false
+    );
   }
+
   componentWillUnmount() {
     if (process.env.NODE_ENV !== "production") {
       document.removeEventListener("keydown", this.toggle, false);
     }
-    
+
     document.removeEventListener(
       "Killstreak:UI:getAllKillstreaks",
       this.getAllKillstreaks,
@@ -219,9 +271,14 @@ class App extends React.Component {
       this.hideKsButton,
       false
     );
+    document.removeEventListener(
+      "Killstreak:UI:newTimer",
+      this.newTimer,
+      false
+    );
   }
+
   onSelectedChange(newValues) {
-    console.log("new Values", newValues);
     let orig = [];
     newValues.forEach((el) => {
       orig.push(el.original);
@@ -249,7 +306,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <>
         <Layout style={{ height: "100vh" }} className={"overallBackground"}>
@@ -267,11 +323,13 @@ class App extends React.Component {
                   position: "relative",
                   display: "flex",
                   flexDirection: "row",
-                  flexWrap:"wrap",
+                  flexWrap: "wrap",
                   opacity: "0.5",
                   fontFamily: "bf3Better",
-                  left: "3%"
+                  left: "3%",
                 }}
+                timers={this.state.timers}
+                onCompleted={this.onTimerComplete}
               />
             </Sider>
             <Content className={"overallBackground"}></Content>

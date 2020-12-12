@@ -1,5 +1,7 @@
 import React from "react";
 import { Steps,Button } from "antd";
+import KsTimer from "./kstimer/kstimer"
+import KsTimerList from "./kstimer/kstimerlist";
 const { Step } = Steps;
 class Progess extends React.Component {
   constructor(props) {
@@ -62,7 +64,6 @@ class Progess extends React.Component {
       e.detail = 0
     }
     let { step, perc } = this.setCurrentStep(e.detail);
-    console.log(step,perc)
     this.setState({
       score: e.detail
     });
@@ -83,7 +84,6 @@ class Progess extends React.Component {
   }
 
   setCurrentStep(score) {
-    console.log("layout",this.props.layout)
     if (this.props.layout.length === 0) {
       return { step: 0, perc: 0 };
     }
@@ -226,10 +226,9 @@ class Progess extends React.Component {
             Killstreaks
         </Button>
         </div>
-        
         :
         null}
-        
+        <KsTimerList timers={this.props.timers} onCompleted={this.props.onCompleted} />
       </div>
     );
   }
