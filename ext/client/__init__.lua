@@ -62,10 +62,17 @@ Events:Subscribe(
     "Player:Killed",
     function(player)
         if player.id == PlayerManager:GetLocalPlayer().id then
-            WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+            --WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
         end
     end
 )
+
+Hooks:Install('UI:PushScreen', 1, function(hook, screen, priority, parentGraph, stateNodeGuid)
+    local screen = UIGraphAsset(screen)
+    if screen.name == 'UI/Flow/Screen/SpawnScreenPC' then
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+    end
+end)
 
 Events:Subscribe(
     "Player:Respawn",
