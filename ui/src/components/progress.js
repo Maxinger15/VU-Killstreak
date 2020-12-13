@@ -63,7 +63,6 @@ class Progess extends React.Component {
     if(e.detail < 0){
       e.detail = 0
     }
-    let { step, perc } = this.setCurrentStep(e.detail);
     this.setState({
       score: e.detail
     });
@@ -93,7 +92,6 @@ class Progess extends React.Component {
     })
     for (let i = 0; i < vals.length; i++) {
       if (vals[i] <= score && score < vals[i + 1]) {
-        let used = vals[i-1] != undefined ? vals[i-1] : 0
         let erg = this.setCurrentStepPercentage(i, score- vals[i],vals);
         /*eslint-disable no-undef*/
         if (process.env.NODE_ENV === "production") {
@@ -195,7 +193,7 @@ class Progess extends React.Component {
           direction="vertical"
           style={{
             color: "white",
-            transform: "scale(1.2)",
+            transform: "scale(1.1)",
             width: "auto",
             fontWeight: "100",
             transformOrigin:"0 0",

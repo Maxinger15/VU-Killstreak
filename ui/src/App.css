@@ -31,7 +31,6 @@
   color: white !important;
 }
 .ant-steps-item-container{
-  padding-bottom: 5%;
   width: fit-content;
 }
 .ant-steps-item .ant-steps-item-content{
@@ -79,7 +78,7 @@
 }
 
 .ksButton{
- color: white; font-family: bf3Better;  width: 30%;margin-top: 6%;
+ color: white; font-family: bf3Better;  width: 30%;
 }
 
 .infoText{
@@ -87,4 +86,5 @@
   font-family: bf3Better;
   flex-basis: 30%;
   text-align: center;
+  margin-bottom: 3%;
 }

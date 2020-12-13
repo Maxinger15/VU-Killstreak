@@ -309,7 +309,7 @@ class App extends React.Component {
     return (
       <>
         <Layout style={{ height: "100vh" }} className={"overallBackground"}>
-          <Header className={"overallBackground"}></Header>
+          <Header className={"overallBackground"} style={{height:"15%"}}></Header>
           <Layout>
             <Sider className={"overallBackground"} width="30%">
               <Progress
