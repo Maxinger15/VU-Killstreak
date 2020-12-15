@@ -9,7 +9,7 @@ then you can run the UI on your local System with "npm run start"
 > Killstreaks will be provided as extra mods. See here how you [create one](#develop-killstreaks)
 <img src="./github_styles/killstreak.gif" width="600" height="400"/>
 
-## Available killstreaks:
+## Killstreak-Mods:
 > Killstreaks only work if you load them in the ModList.txt
 - [Artillery Strike](https://github.com/Maxinger15/vu-artillerystrike)
 - [Tactical Missle (WIP)](https://github.com/Maxinger15/vu-tactical-missile)
