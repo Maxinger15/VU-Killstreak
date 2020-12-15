@@ -78,7 +78,6 @@ The file looks like that:
 >        150, -- the cost of the killstreak (can/should be changed)
 >        "Grenades", -- The name that is shown in the UI
 >        "Left %NR", -- The description that is shown in the UI.
->        "F5", -- shown in the circle at the UI
 >        "Press F to use", -- replaces the description when the killstreak is ready to use
 >      },
 >      {
@@ -87,7 +86,6 @@ The file looks like that:
 >        250,
 >        "Health",
 >        "Left %NR",
->        "F5",
 >        "Press F to use",
 >      },
 >      ...
