@@ -60,7 +60,6 @@ class App extends React.Component {
         150,
         "Grenades",
         "Left %NR",
-        "F5",
         "Press F to use",
       ],
       [
@@ -69,7 +68,6 @@ class App extends React.Component {
         250,
         "Health",
         "Left %NR",
-        "F5",
         "Press F to use",
       ],
       [
@@ -78,7 +76,6 @@ class App extends React.Component {
         350,
         "Ac130",
         "Left %NR",
-        "F5",
         "Press F to use",
       ],
       [
@@ -87,7 +84,6 @@ class App extends React.Component {
         450,
         "Tactical Missle",
         "Left %NR",
-        "F5",
         "Press F to use",
       ],
       [
@@ -96,7 +92,6 @@ class App extends React.Component {
         550,
         "Big big boom",
         "Left %NR",
-        "F5",
         "Press F to use",
       ],
       [
@@ -105,7 +100,6 @@ class App extends React.Component {
         650,
         "low boom",
         "Left %NR",
-        "F5",
         "Press F to use",
       ],
       [
@@ -114,7 +108,6 @@ class App extends React.Component {
         750,
         "walking speed increase",
         "Left %NR",
-        "F5",
         "Press F to use",
       ],
       [
@@ -123,7 +116,6 @@ class App extends React.Component {
         850,
         "more health",
         "Left %NR",
-        "F5",
         "Press F to use",
       ],
       [
@@ -132,7 +124,6 @@ class App extends React.Component {
         850,
         "more health",
         "Left %NR",
-        "F5",
         "Press F to use",
       ],
     ];

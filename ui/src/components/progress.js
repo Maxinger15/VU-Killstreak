@@ -127,8 +127,8 @@ class Progess extends React.Component {
     }
     
   }
-  createDiscription(el) {
-    let str = el[4];
+  createDescription(el) {
+    let str = el[3];
     if (str == undefined) {
       return "";
     }
@@ -136,7 +136,7 @@ class Progess extends React.Component {
     //Hier kann Use It Animation eingefügt werden
     if (erg <= 0) {
       erg = 0;
-      return el[6];
+      return el[5];
     }
     return str.replace("%NR", erg);
   }
@@ -149,7 +149,7 @@ class Progess extends React.Component {
             className="ant-steps-icon"
             style={{ height: "100%", top: "5px" }}
           >
-            <span style={{ top: "-2px" }}>{el[5]}</span>
+            <span style={{ top: "-2px" }}>{"F"+(5+index)}</span>
           </div>
         </div>
       );
@@ -161,13 +161,13 @@ class Progess extends React.Component {
             style={{ height: "100%", top: "6px" }}
           >
             <span style={{ color: "white" }}>
-              {el[5]}
+              {"F"+(5+index)}
             </span>
           </div>
         </div>
       );
     } else {
-      return <span>{el[5]}</span>;
+      return <span>{"F"+(5+index)}</span>;
     }
   }
 
@@ -207,7 +207,7 @@ class Progess extends React.Component {
                 icon={this.getIcon(el,index,step)}
                 key={index}
                 title={el[3]}
-                description={this.createDiscription(
+                description={this.createDescription(
                   el
                 )}
                 style={{ color: "white",width:"fit-content" }}

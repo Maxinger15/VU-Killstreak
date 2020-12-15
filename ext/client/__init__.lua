@@ -7,6 +7,7 @@ local keyUpThreshold = 30
 local curKeyUpEvents = 0
 local selectedKillstreaks = nil
 local score = 0
+local disabledAction = false
 Events:Subscribe(
     "Extension:Loaded",
     function()
@@ -58,19 +59,14 @@ Events:Subscribe(
     end
 )
 
-Events:Subscribe(
-    "Player:Killed",
-    function(player)
-        if player.id == PlayerManager:GetLocalPlayer().id then
-            --WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
-        end
-    end
-)
-
 Hooks:Install('UI:PushScreen', 1, function(hook, screen, priority, parentGraph, stateNodeGuid)
     local screen = UIGraphAsset(screen)
     if screen.name == 'UI/Flow/Screen/SpawnScreenPC' then
         WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+    end
+
+    if screen.name == "UI/Flow/Screen/KillScreen" then
+        disabledAction = true
     end
 end)
 
@@ -80,6 +76,7 @@ Events:Subscribe(
         if player.id == PlayerManager:GetLocalPlayer().id then
             WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideKsButton"))')
             WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:hideSelectScreen"))')
+            disabledAction = false
         end
     end
 )
@@ -110,6 +107,9 @@ Events:Subscribe(
     "Client:UpdateInput",
     function(delta)
         if selectedKillstreaks == nil then
+            return
+        end
+        if disabledAction then
             return
         end
         for i, v in pairs(selectedKillstreaks) do

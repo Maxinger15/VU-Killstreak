@@ -1,6 +1,6 @@
 local setting = {
     resetOnDeath = false;
-    ignoreScoreInVehicle = false;
+    ignoreScoreInVehicle = true;
 }
 
 

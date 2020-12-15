@@ -8,7 +8,6 @@ local conf = {
         150,
         "Grenades",
         "Left %NR",
-        "F5",
         "Press F to use",
       },
       {
@@ -17,7 +16,6 @@ local conf = {
         250,
         "Health",
         "Left %NR",
-        "F5",
         "Press F to use",
       },
       {
@@ -26,7 +24,6 @@ local conf = {
         350,
         "Ac130",
         "Left %NR",
-        "F5",
         "Press F to use",
       },
       {
@@ -35,7 +32,6 @@ local conf = {
         450,
         "Tactical Missle",
         "Left %NR",
-        "F5",
         "Press F to use",
       },
       {
@@ -44,7 +40,6 @@ local conf = {
         550,
         "Big big boom",
         "Left %NR",
-        "F5",
         "Press F to use",
       },
       {
@@ -53,7 +48,6 @@ local conf = {
         650,
         "low boom",
         "Left %NR",
-        "F5",
         "Press F to use",
       },
       {
@@ -62,7 +56,6 @@ local conf = {
         750,
         "walking speed increase",
         "Left %NR",
-        "F5",
         "Press F to use",
       },
       {
@@ -71,7 +64,6 @@ local conf = {
         850,
         "more health",
         "Left %NR",
-        "F5",
         "Press F to use",
       },
       {
@@ -80,7 +72,6 @@ local conf = {
         850,
         "more health 2",
         "Left %NR",
-        "F5",
         "Press F to use",
       },
 }
