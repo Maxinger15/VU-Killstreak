@@ -10,8 +10,9 @@ then you can run the UI on your local System with "npm run start"
 <img src="./github_styles/killstreak.gif" width="600" height="400"/>
 
 ## Available killstreaks:
+> Killstreaks only work if you load them in the ModList.txt
 - [Artillery Strike](https://github.com/Maxinger15/vu-artillerystrike)
-- [Tactical Missle WIP](https://github.com/Maxinger15/vu-tactical-missle)
+- [Tactical Missle (WIP)](https://github.com/Maxinger15/vu-tactical-missle)
 
 ## Develop killstreaks:
 
@@ -30,7 +31,7 @@ Parameters:
 - stepNr: The number of your killstreak (1-4 including)
 - keyboardKey: The key the user pressed to invoke your killstreak
 > ```lua
->Events:Subscribe("vu-artillerystrike:Invoke",function(stepNr,keyboardKey)
+>Events:Subscribe("<your mod name>:Invoke",function(stepNr,keyboardKey)
 >	-- Killstreak enabled. Enable UI if available
 >    Do things the killstreak should do
 >end)
@@ -39,9 +40,17 @@ Parameters:
 The <your mod name in mod.json>:Disable event is only necessary if you have a step between
 invoke killstreak and actually use it. A UI where you can select a place for example. See [this](https://github.com/Maxinger15/vu-artillerystrike)
 > ```lua
-> Events:Subscribe("vu-artillerystrike:Disable",function(stepNr)
+> Events:Subscribe("<your mod name>:Disable",function(stepNr)
 >	-- Killstreak not Used. Disable UI....
 > end)
+>```
+  
+The Killstreak:newTimer event allows you to show a timer at the UI
+The timerObj needs the following properties:
+- duration: number - time to tick in seconds
+- text: text displayed at the UI (best letters < 25 but not limited)
+> ```lua
+> Events:Dispatch("Killstreak:newTimer", timerObj)
 >```
   
 Dispatch this event when the killstreak was used.
@@ -51,29 +60,40 @@ Parameter:
 > ```lua
 > Events:Dispatch("Killstreak:usedStep",stepNr)
 > ```
-
+# Configuration
+In the Server folder you can find this configuration files.
 ## Configuration.lua
-In the server folder you can find a file called Configuration.lua.
 In this file you define which killstreak mods are available, how many points they cost, change the selection keys (not recommended!)
 Currently only 4 killstreaks at the same time are supportet!!! Not more not less!
 The file looks like that:
 >```lua
 >local conf  ={
->    {
->        "vu-artillerystrike","vu-ac130","vu-artystrike","vu-ac130" -- Change this to the name in the mod.json of your killstreaks
->    },
->    {
->        InputDeviceKeys.IDK_F5,InputDeviceKeys.IDK_F6,InputDeviceKeys.IDK_F7,InputDeviceKeys.IDK_F8 -- Select keys (don't change for usability purposes)
->    },
- >   {
->        150,250,350,450 -- The cost of the killstreaks (can/should be changed)
->    },{
->        "Grenades","Health","Airstrike","AC130" -- The name that is shown in the UI
->    },{
- >       "Left %NR","Left %NR","Left %NR","Left %NR" -- The description that is shown in the UI. 
->        
- >   }
+>{
+>        "vu-artillerystrike", -- name from the mod.json of the killstreak
+>        InputDeviceKeys.IDK_F5, -- key to trigger the killstreak
+>        150, -- the cost of the killstreak (can/should be changed)
+>        "Grenades", -- The name that is shown in the UI
+>        "Left %NR", -- The description that is shown in the UI.
+>        "F5", -- shown in the circle at the UI
+>        "Press F to use", -- replaces the description when the killstreak is ready to use
+>      },
+>      {
+>        "vu-artillerystrike",
+>        65,
+>        250,
+>        "Health",
+>        "Left %NR",
+>        "F5",
+>        "Press F to use",
+>      },
+>      ...
 >}
 >```
-
 Fancy thing: %NR will be replaced by the UI with the points left to unlock the killstreak. "Left: %NR Points" -> "Left: 150 Points"
+
+## settings.lua
+Here you can change the mechanics of the mod.
+> local setting = {
+>    resetOnDeath = false; -- resets the points of the player to 0 if he dies
+>    ignoreScoreInVehicle = false; -- ignores all points a player get if he is in a vehicle 
+> }
