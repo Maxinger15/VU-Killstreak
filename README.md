@@ -46,6 +46,7 @@ invoke killstreak and actually use it. A UI where you can select a place for exa
 >```
   
 The Killstreak:newTimer event allows you to show a timer at the UI
+<img src="./github_styles/timer.png"/>
 The timerObj needs the following properties:
 - duration: number - time to tick in seconds
 - text: text displayed at the UI (best letters < 25 but not limited)
@@ -61,8 +62,9 @@ Parameter:
 > Events:Dispatch("Killstreak:usedStep",stepNr)
 > ```
 # Configuration
+## Server
 In the Server folder you can find this configuration files.
-## Configuration.lua
+### Configuration.lua
 In this file you define which killstreak mods are available, how many points they cost, change the selection keys (not recommended!)
 Currently only 4 killstreaks at the same time are supportet!!! Not more not less!
 The file looks like that:
@@ -70,7 +72,7 @@ The file looks like that:
 >local conf  ={
 >{
 >        "vu-artillerystrike", -- name from the mod.json of the killstreak
->        InputDeviceKeys.IDK_F5, -- key to trigger the killstreak
+>        InputDeviceKeys.IDK_F5, !!deprecated ! don't use !! -- key to trigger the killstreak
 >        150, -- the cost of the killstreak (can/should be changed)
 >        "Grenades", -- The name that is shown in the UI
 >        "Left %NR", -- The description that is shown in the UI.
@@ -91,9 +93,19 @@ The file looks like that:
 >```
 Fancy thing: %NR will be replaced by the UI with the points left to unlock the killstreak. "Left: %NR Points" -> "Left: 150 Points"
 
-## settings.lua
+### settings.lua
 Here you can change the mechanics of the mod.
 > local setting = {
 >    resetOnDeath = false; -- resets the points of the player to 0 if he dies
 >    ignoreScoreInVehicle = false; -- ignores all points a player get if he is in a vehicle 
 > }
+
+## Client
+### keybindings.lua
+Here you can define which keys are used to trigger the killstreak-mod execution.
+The basic key to use the killstreak after that is F9
+>local bindings = {
+>    InputDeviceKeys.IDK_F5,InputDeviceKeys.IDK_F6,InputDeviceKeys.IDK_F7,InputDeviceKeys.IDK_F8
+>}
+
+Get your values from [here](https://docs.veniceunleashed.net/vext/ref/fb/inputdevicekeys/)
