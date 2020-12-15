@@ -128,7 +128,7 @@ class Progess extends React.Component {
     
   }
   createDescription(el) {
-    let str = el[3];
+    let str = el[4];
     if (str == undefined) {
       return "";
     }
