@@ -12,8 +12,8 @@ then you can run the UI on your local System with "npm run start"
 ## Available killstreaks:
 > Killstreaks only work if you load them in the ModList.txt
 - [Artillery Strike](https://github.com/Maxinger15/vu-artillerystrike)
-- [Tactical Missle (WIP)](https://github.com/Maxinger15/vu-tactical-missle)
-
+- [Tactical Missle (WIP)](https://github.com/Maxinger15/vu-tactical-missile)
+- [Grenade restock](https://github.com/Maxinger15/vu-ks-grenades)
 ## Develop killstreaks:
 
 ### Defaults:
