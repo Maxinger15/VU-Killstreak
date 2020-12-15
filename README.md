@@ -46,7 +46,9 @@ invoke killstreak and actually use it. A UI where you can select a place for exa
 >```
   
 The Killstreak:newTimer event allows you to show a timer at the UI
+
 <img src="./github_styles/timer.png"/>
+
 The timerObj needs the following properties:
 - duration: number - time to tick in seconds
 - text: text displayed at the UI (best letters < 25 but not limited)
