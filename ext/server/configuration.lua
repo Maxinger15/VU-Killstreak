@@ -11,10 +11,10 @@ local conf = {
         "Press F to use",
       },
       {
-        "vu-artillerystrike",
+        "vu-grenades",
         65,
-        250,
-        "Rocket",
+        200,
+        "Grenades",
         "Left %NR",
         "Press F to use",
       },
