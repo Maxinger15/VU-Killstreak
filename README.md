@@ -7,6 +7,7 @@ On first use go into the UI Folder and type in the command line "npm install" to
 then you can run the UI on your local System with "npm run start"
 
 > Killstreaks will be provided as extra mods. See here how you [create one](#develop-killstreaks)
+
 <img src="./github_styles/killstreak.gif" width="600" height="400"/>
 
 ## Killstreak-Mods:
@@ -17,10 +18,11 @@ then you can run the UI on your local System with "npm run start"
 ## Develop killstreaks:
 
 ### Defaults:
-The default keys to trigger the killstreaks are F5,F6 ,F7 ,F8.
-It is possible to change this in the configuration.lua but it would be more instinctively to keep the defaults.
-The default key to trigger the killstreak if it has a UI (for example when you can place it at a location) the
-default key should be F.
+The default keys to trigger the killstreaks are F5, F6 ,F7 ,F8.
+It is possible to change this in the configuration.lua but it would be more instinctively to keep the defaults
+and the UI needs to be modified.
+If it don't has a UI then the Killstreak should be activated in one step with the trigger.
+If it has a UI then it should be separately activated with F9 after the killstreak was triggerd.
 
 ### Events:
 Your killstreak needs the following Events at the client side to be used by the core mod.
@@ -49,11 +51,22 @@ The Killstreak:newTimer event allows you to show a timer at the UI
 
 <img src="./github_styles/timer.png"/>
 
-The timerObj needs the following properties:
+The timerObj in the JSON-String needs the following properties:
 - duration: number - time to tick in seconds
 - text: text displayed at the UI (best letters < 25 but not limited)
 > ```lua
-> Events:Dispatch("Killstreak:newTimer", timerObj)
+> Events:Dispatch("Killstreak:newTimer", timerObjJson)
+>```
+
+The Killstreak:newTimer event allows you to show a timer at the UI
+
+<img src="./github_styles/notification.PNG"/>
+
+The messageObj in the JSON-String needs the following properties:
+- title: string
+- message: string
+> ```lua
+> Events:Dispatch("Killstreak:showNotification", messageObjJson)
 >```
   
 Dispatch this event when the killstreak was used.
