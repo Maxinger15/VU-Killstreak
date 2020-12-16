@@ -51,6 +51,15 @@ NetEvents:Subscribe(
     end
 )
 
+-- Invoke this to show a message on the screen. 
+-- messageObj: {title: string, message: string} as JSON string
+Events:Subscribe(
+    "Killstreak:showNotification",
+    function(messageObjJson)
+        WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UI:showNotification",{detail:'... messageObjJson ...'}))')
+    end
+)
+
 Events:Subscribe(
     "Level:Finalized",
     function(levelName, gameMode)

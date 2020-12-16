@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Button } from "antd";
+import { Layout, Button, notification } from "antd";
 
 import "antd/dist/antd.css";
 import "./App.css";
@@ -27,6 +27,7 @@ class App extends React.Component {
     this.clearAllTimers = this.clearAllTimers.bind(this);
     this.onTimerComplete = this.onTimerComplete.bind(this);
     this.newTimer = this.newTimer.bind(this)
+    this.showNotification = this.showNotification.bind(this)
   }
 
   clearAllTimers() {
@@ -44,12 +45,12 @@ class App extends React.Component {
     });
     if (!notFinished) {
       this.clearAllTimers()
-    }else{
+    } else {
       this.setState({
         timers: this.state.timers,
       });
     }
-    
+
   }
 
   getTestData() {
@@ -149,10 +150,10 @@ class App extends React.Component {
     });
   }
 
-  newTimer(e){
+  newTimer(e) {
     let timersN = this.state.timers;
     timersN.push(JSON.parse(e.detail))
-    console.log("new List",timersN)
+    console.log("new List", timersN)
     this.setState({
       timers: timersN
     })
@@ -230,6 +231,12 @@ class App extends React.Component {
       this.newTimer,
       false
     );
+
+    document.addEventListener(
+      "Killstreak:UI:showNotification",
+      this.showNotification,
+      false
+    );
   }
 
   componentWillUnmount() {
@@ -267,6 +274,24 @@ class App extends React.Component {
       this.newTimer,
       false
     );
+    document.removeEventListener(
+      "Killstreak:UI:showNotification",
+      this.showNotification,
+      false
+    );
+  }
+
+  showNotification(e) {
+    let obj = JSON.parse(e.detail)
+    notification.open({
+      message: obj.title,
+      className: 'ksNotification',
+      duration: 3,
+      top: 72,
+      closeIcon: <div></div>,
+      description: obj.message,
+      placement: "topRight",
+    });
   }
 
   onSelectedChange(newValues) {
@@ -300,7 +325,7 @@ class App extends React.Component {
     return (
       <>
         <Layout style={{ height: "100vh" }} className={"overallBackground"}>
-          <Header className={"overallBackground"} style={{height:"15%"}}></Header>
+          <Header className={"overallBackground"} style={{ height: "15%" }}></Header>
           <Layout>
             <Sider className={"overallBackground"} width="30%">
               <Progress

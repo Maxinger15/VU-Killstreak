@@ -6,4 +6,19 @@
           -ms-user-select: none; /* Internet Explorer/Edge */
               user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
+   
   }
+
+.ksNotification{
+  background-color:rgba(5, 57, 97,0.5);
+  box-shadow: 2px 2px 4px 2px rgba(5, 57, 97,0.2);
+  color: white;
+  max-height: fit-content;
+  min-height: fit-content;
+  min-width: max-content;
+  max-width: max-content;
+  top: 10%
+}
+.ant-notification-notice-message{
+  color:white;
+}
