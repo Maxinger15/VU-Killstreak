@@ -58,7 +58,7 @@ The timerObj in the JSON-String needs the following properties:
 > Events:Dispatch("Killstreak:newTimer", timerObjJson)
 >```
 
-The Killstreak:newTimer event allows you to show a timer at the UI
+The Killstreak:showNotification event allows you to show a notification at the UI
 
 <img src="./github_styles/notification.PNG"/>
 
