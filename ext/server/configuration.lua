@@ -11,7 +11,7 @@ local conf = {
         "Press F to use",
       },
       {
-        "vu-grenades",
+        "vu-ks-grenades",
         65,
         200,
         "Grenades",
@@ -19,10 +19,10 @@ local conf = {
         "Press F to use",
       },
       {
-        "vu-artillerystrike",
+        "vu-ks-smokescreen",
         65,
         350,
-        "Dummy 1",
+        "Smokescreen",
         "Left %NR",
         "Press F to use",
       },

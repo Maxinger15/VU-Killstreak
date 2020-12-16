@@ -51,12 +51,15 @@ NetEvents:Subscribe(
     end
 )
 
--- Invoke this to show a message on the screen. 
+-- Invoke this to show a message on the screen.
 -- messageObj: {title: string, message: string} as JSON string
 Events:Subscribe(
     "Killstreak:showNotification",
     function(messageObjJson)
-        WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UI:showNotification",{detail:'... messageObjJson ...'}))')
+        WebUI:ExecuteJS(
+            'document.dispatchEvent(new CustomEvent("Killstreak:UI:showNotification",{detail:' ..
+                messageObjJson .. "}))"
+        )
     end
 )
 
@@ -68,16 +71,20 @@ Events:Subscribe(
     end
 )
 
-Hooks:Install('UI:PushScreen', 1, function(hook, screen, priority, parentGraph, stateNodeGuid)
-    local screen = UIGraphAsset(screen)
-    if screen.name == 'UI/Flow/Screen/SpawnScreenPC' then
-        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
-    end
+Hooks:Install(
+    "UI:PushScreen",
+    1,
+    function(hook, screen, priority, parentGraph, stateNodeGuid)
+        local screen = UIGraphAsset(screen)
+        if screen.name == "UI/Flow/Screen/SpawnScreenPC" then
+            WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+        end
 
-    if screen.name == "UI/Flow/Screen/KillScreen" then
-        disabledAction = true
+        if screen.name == "UI/Flow/Screen/KillScreen" then
+            disabledAction = true
+        end
     end
-end)
+)
 
 Events:Subscribe(
     "Player:Respawn",
@@ -105,7 +112,9 @@ Events:Subscribe(
 Events:Subscribe(
     "Killstreak:newTimer",
     function(timerObjJson)
-        WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UI:newTimer",{detail:"' .. timerObjJson .. '"}))')
+        WebUI:ExecuteJS(
+            'window.dispatchEvent(new CustomEvent("Killstreak:UI:newTimer",{detail:"' .. timerObjJson .. '"}))'
+        )
     end
 )
 
@@ -169,8 +178,9 @@ NetEvents:Subscribe(
     function(data)
         data = tonumber(data)
         score = data
+        WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')
         print("Got Data " .. tostring(data))
-        count = 0
+        count = 1
         tempTable = {}
         if selectedKillstreaks ~= nil then
             tempTable = selectedKillstreaks
@@ -178,31 +188,34 @@ NetEvents:Subscribe(
         for _ in pairs(tempTable) do
             count = count + 1
         end
+        if count == 1 then
+            return
+        end
         for i = 1, count, 1 do
-            if i == count then
-                step = 0
+            if i + 1 == count then
+                step = 4
                 break
             end
-            -- if i == 1 then
-            --    print(tostring(selectedKillstreaks[i][3]) .. " | " .. tostring(data))
-            --    if data <= selectedKillstreaks[i][3] then
-            --        print("New Step " .. tostring(i))
-            --        step = i
-            --        break
-            --    end
-            -- else
-            print(
-                tostring(selectedKillstreaks[i][3]) ..
-                    " | " .. tostring(data) .. " | " .. tostring(selectedKillstreaks[i + 1][3])
-            )
-            if selectedKillstreaks[i][3] <= data and data < selectedKillstreaks[i + 1][3] then
+            
+            if i == 1 then
+                print(json.encode(tempTable))
+                if tempTable[i][3] > data then
+                    print("New Step minimal " .. tostring(0))
+                    step = 0
+                    break
+                end
+            end
+            if tempTable[i][3] <= data and data < tempTable[i + 1][3] then
                 print("New Step " .. tostring(i))
                 step = i
                 break
             end
-            -- end
+            print(
+                tostring(tempTable[i][3]) ..
+                    " | " .. tostring(data) .. " | " .. tostring(tempTable[i + 1][3])
+            )
         end
-        WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')
+        
     end
 )
 NetEvents:Subscribe(
