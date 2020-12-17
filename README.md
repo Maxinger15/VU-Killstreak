@@ -13,7 +13,7 @@ then you can run the UI on your local System with "npm run start"
 ## Killstreak-Mods:
 > Killstreaks only work if you load them in the ModList.txt
 - [Artillery Strike](https://github.com/Maxinger15/vu-artillerystrike)
-- [Tactical Missle (WIP)](https://github.com/Maxinger15/vu-tactical-missile)
+- [Tactical Missile (WIP)](https://github.com/Maxinger15/vu-tactical-missile)
 - [Grenade restock](https://github.com/Maxinger15/vu-ks-grenades)
 - [Smokescreen](https://github.com/Maxinger15/vu-ks-smokescreen)
 ## Develop killstreaks:
