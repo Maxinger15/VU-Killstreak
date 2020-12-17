@@ -18,10 +18,30 @@ function Killstreak:__init()
 
     Events:Subscribe("Server:RoundOver",self, function()
         NetEvents:Broadcast("Killstreak:hideAll")
+        for i,v in pairs(self.playerScores)do
+            self.playerScores[i] = 0
+        end
+        for i,v in pairs(self.playerKillstreakScore)do
+            self.playerKillstreakScore[i] = 0
+            NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:getPlayerById(i), tostring(0))
+        end
     end)
 
     Events:Subscribe("Server:RoundReset",self, function()
         NetEvents:Broadcast("Killstreak:hideAll")
+        for i,v in pairs(self.playerScores)do
+            self.playerScores[i] = 0
+        end
+        for i,v in pairs(self.playerKillstreakScore)do
+            self.playerKillstreakScore[i] = 0
+            NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:getPlayerById(i), tostring(0))
+        end
+    end)
+    Events:Subscribe("Player:Authenticated",self,function(player)
+        if self.playerKillstreakScore[player.id] ~= nil then
+            NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:getPlayerById(i), tostring(self.playerKillstreakScore[player.id]))
+        end
+    
     end)
 
     if settings.resetOnDeath then
