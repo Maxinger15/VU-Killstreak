@@ -152,6 +152,7 @@ class App extends React.Component {
 
   newTimer(e) {
     let timersN = this.state.timers;
+    console.log("New Timer: ",e.detail)
     timersN.push(JSON.parse(e.detail))
     console.log("new List", timersN)
     this.setState({
@@ -282,11 +283,12 @@ class App extends React.Component {
   }
 
   showNotification(e) {
+    console.log("Notification: ",e.detail)
     let obj = JSON.parse(e.detail)
     notification.open({
       message: obj.title,
       className: 'ksNotification',
-      duration: 3,
+      duration: 5,
       top: 72,
       closeIcon: <div></div>,
       description: obj.message,

@@ -15,7 +15,7 @@ class Progess extends React.Component {
   }
 
   setLayout() {
-    window.dispatchEvent(
+    document.dispatchEvent(
       new CustomEvent("Killstreak:getConfig", {
         detail: JSON.stringify([
           [
@@ -69,14 +69,14 @@ class Progess extends React.Component {
   };
 
   componentDidMount() {
-    window.addEventListener("Killstreak:UpdateScore", this.updateScoreCallback);
+    document.addEventListener("Killstreak:UpdateScore", this.updateScoreCallback);
     if (process.env.NODE_ENV !== "production") {
       //this.setLayout();
     }
   }
 
   componentWillUnmount() {
-    window.removeEventListener(
+    document.removeEventListener(
       "Killstreak:UpdateScore",
       this.updateScoreCallback
     );

@@ -2,7 +2,6 @@ local bindings = require("keybindings.lua")
 local conf = nil
 local step = -1
 local inUse = {false, false, false, false}
-local newEvent = true
 local keyUpThreshold = 30
 local curKeyUpEvents = 0
 local selectedKillstreaks = nil
@@ -56,6 +55,18 @@ NetEvents:Subscribe(
 Events:Subscribe(
     "Killstreak:showNotification",
     function(messageObjJson)
+        messageObjJson = json.encode(messageObjJson)
+        WebUI:ExecuteJS(
+            'document.dispatchEvent(new CustomEvent("Killstreak:UI:showNotification",{detail:' ..
+                messageObjJson .. "}))"
+        )
+    end
+)
+
+NetEvents:Subscribe(
+    "Killstreak:showNotification",
+    function(messageObjJson)
+        messageObjJson = json.encode(messageObjJson)
         WebUI:ExecuteJS(
             'document.dispatchEvent(new CustomEvent("Killstreak:UI:showNotification",{detail:' ..
                 messageObjJson .. "}))"
@@ -101,26 +112,39 @@ Events:Subscribe(
     "Killstreak:selectedKillstreaks",
     function(ks)
         test = json.encode(ks)
-        print("ks test " .. test)
+        -- print("ks test " .. test)
         NetEvents:SendLocal("Killstreak:updatePlayerKS", json.decode(ks))
         decodeKs = json.decode(ks)
         selectedKillstreaks = decodeKs
-        WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. score .. '"}))')
+        WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. score .. '"}))')
     end
 )
 -- timerObjJson: JSON string from the timer object for the frontend {duration: number,text: string}
 Events:Subscribe(
     "Killstreak:newTimer",
     function(timerObjJson)
+        print(timerObjJson)
+        timerObjJson = json.encode(timerObjJson)
         WebUI:ExecuteJS(
-            'window.dispatchEvent(new CustomEvent("Killstreak:UI:newTimer",{detail:"' .. timerObjJson .. '"}))'
+            'document.dispatchEvent(new CustomEvent("Killstreak:UI:newTimer",{detail:' .. timerObjJson .. '}))'
+        )
+    end
+)
+
+-- timerObjJson: JSON string from the timer object for the frontend {duration: number,text: string}
+NetEvents:Subscribe(
+    "Killstreak:newTimer",
+    function(timerObjJson)
+        print(timerObjJson)
+        timerObjJson = json.encode(timerObjJson)
+        WebUI:ExecuteJS(
+            'document.dispatchEvent(new CustomEvent("Killstreak:UI:newTimer",{detail:' .. timerObjJson .. '}))'
         )
     end
 )
 
 -- Your mod get the following parameters in the Invoke Event:
 -- 1. Position of Killstreak 1-4
--- 2. Key who toggle the Killstreak
 Events:Subscribe(
     "Client:UpdateInput",
     function(delta)
@@ -131,38 +155,28 @@ Events:Subscribe(
             return
         end
         for i, v in pairs(selectedKillstreaks) do
-            if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false and newEvent == true then
+            if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false then
+                print("key detected")
                 if i <= step then
                     print("Activate")
-                    newEvent = false
                     print("Dispatched event " .. tostring(selectedKillstreaks[i][1]))
                     inUse[i] = true
-                    Events:Dispatch(selectedKillstreaks[i][1] .. ":Invoke", i, tonumber(v))
+                    Events:Dispatch(selectedKillstreaks[i][1] .. ":Invoke", i)
                     return
                 end
             end
-            if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == true and newEvent == true then
+            if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == true  then
                 print("Disable")
                 Events:Dispatch(selectedKillstreaks[i][1] .. ":Disable", i)
                 inUse[i] = false
-                newEvent = false
                 return
-            end
-            if InputManager:WentKeyUp(tonumber(bindings[i])) == false and newEvent == false then
-                --if curKeyUpEvents >= keyUpThreshold then
-                print("New Event")
-                newEvent = true
-            -- curKeyUpEvents = 0
-            --else
-            -- curKeyUpEvents = curKeyUpEvents + 1
-            --end
             end
         end
     end
 )
 
 function getConf(config)
-    print("Get conf " .. config)
+    -- print("Get conf " .. config)
     confResend = json.encode(config)
     WebUI:Init()
     WebUI:ExecuteJS(
@@ -178,7 +192,7 @@ NetEvents:Subscribe(
     function(data)
         data = tonumber(data)
         score = data
-        WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')
+        WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')
         print("Got Data " .. tostring(data))
         count = 1
         tempTable = {}
