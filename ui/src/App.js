@@ -16,6 +16,7 @@ class App extends React.Component {
       selectedKillstreaks: [],
       showKsButton: true,
       timers: [],
+      selectedStep : -10
     };
     this.toggle = this.toggle.bind(this);
     this.getAllKillstreaks = this.getAllKillstreaks.bind(this);
@@ -28,6 +29,7 @@ class App extends React.Component {
     this.onTimerComplete = this.onTimerComplete.bind(this);
     this.newTimer = this.newTimer.bind(this)
     this.showNotification = this.showNotification.bind(this)
+    this.selectedStep = this.selectedStep.bind(this)
   }
 
   clearAllTimers() {
@@ -183,6 +185,11 @@ class App extends React.Component {
       showKsButton: false,
     });
   }
+  selectedStep(e){
+    this.setState({
+      selectedStep: parseInt(e.detail) 
+    })
+  }
 
   componentDidMount() {
     if (process.env.NODE_ENV !== "production") {
@@ -238,6 +245,12 @@ class App extends React.Component {
       this.showNotification,
       false
     );
+
+    document.addEventListener(
+      "Killstreak:UI:selectStep",
+      this.selectedStep,
+      false
+    );
   }
 
   componentWillUnmount() {
@@ -278,6 +291,11 @@ class App extends React.Component {
     document.removeEventListener(
       "Killstreak:UI:showNotification",
       this.showNotification,
+      false
+    );
+    document.removeEventListener(
+      "Killstreak:UI:selectStep",
+      this.selectedStep,
       false
     );
   }
@@ -331,6 +349,7 @@ class App extends React.Component {
           <Layout>
             <Sider className={"overallBackground"} width="30%">
               <Progress
+                selectedStep={this.state.selectedStep}
                 layout={this.getOriginalLayoutArray(
                   this.state.selectedKillstreaks
                 )}
