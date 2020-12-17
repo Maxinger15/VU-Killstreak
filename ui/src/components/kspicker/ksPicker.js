@@ -145,11 +145,14 @@ export default class KsPicker extends React.Component {
                       textAlign: "center",
                       paddingLeft: "4px",
                       paddingRight: "4px",
-                      fontWeight: "bold",
+                      color:"white",
+                      fontSize:"18px"
                     }}
                     bodyStyle={{
                       textAlign: "center",
                       padding: "8px 4px 10px 4px",
+                      color:"white",
+                      fontSize: "13px"
                     }}
                   >
                     <Row gutter={[8, 8]} justify="center" align="middle">

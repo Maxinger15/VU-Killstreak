@@ -1,3 +1,11 @@
 .ant-card{
-    background-color: rgba(41, 69, 95, 0.85);
+    background-color: rgba(41, 69, 95, 0.75);
 }
+.ant-btn-ghost{
+ transition: 0.1s;
+}
+.ant-btn-ghost:hover{
+      background-color: rgba(41, 69, 95, 1)  !important;
+      border-color: white !important;
+      border: 1px solid white !important;
+  }
