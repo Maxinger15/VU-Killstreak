@@ -15,6 +15,14 @@
 .ant-steps{
   width:auto
 }
+.ant-steps-item-error .ant-steps-item-icon {
+  background-color: rgba(252, 207, 3,0.7);
+  border-color: rgba(252, 207, 3,0.6);
+  color: white;
+}
+.ant-steps-item-error .ant-steps-item-icon > .ant-steps-icon {
+  color:white;
+}
 .ant-layout-sider{
   background: transparent !important;
 }

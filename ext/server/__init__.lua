@@ -1,6 +1,7 @@
 local conf = require("configuration.lua")
 local settings = require("settings.lua")
 local outputs = 0
+local debug = true
 class "Killstreak"
 
 function Killstreak:__init()
@@ -88,12 +89,15 @@ function Killstreak:OnLoad()
 end
 
 function Killstreak:sendConfToNewClient(player)
-    print("New Player " .. player.name .. "with conf " .. json.encode(conf))
     if self.playerKillstreaks[player.id] == nil then
         self.playerKillstreaks[player.id] = {}
     end
     if self.playerScoreDisabled[player.id] == nil then
         self.playerScoreDisabled[player.id] = false
+    end
+    if self.playerKillstreakScore[player.id] ~= nil and self.playerKillstreakScore[player.id] ~= 0 then
+        print("Sending score to known player: ".. tostring(self.playerKillstreakScore[player.id]))
+        NetEvents:SendTo("Killstreak:ScoreUpdate", player, tostring(self.playerKillstreakScore[player.id]))
     end
     NetEvents:SendTo("Killstreak:Client:getConf", player, json.encode(conf))
 end
@@ -165,6 +169,21 @@ function Killstreak:OnPlayerUpdate(player, deltaTime)
         )
         NetEvents:SendTo("Killstreak:ScoreUpdate", player, tostring(self.playerKillstreakScore[player.id]))
     end
+end
+
+if debug then
+
+    Events:Subscribe("Player:Chat",function(player, recipientMask, message)
+    if message == "!timertest" then
+        NetEvents:SendTo("Killstreak:newTimer",player,json.encode({duration = 40, text="Test Timer"}))
+    end
+    if message == "!mestest" then
+        NetEvents:SendTo("Killstreak:showNotification",player,json.encode({message = "Test Message", title="Test Title"}))
+    end
+    
+    
+    end)
+
 end
 
 g_KillStreakServer = Killstreak()

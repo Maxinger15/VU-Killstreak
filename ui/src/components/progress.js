@@ -15,7 +15,7 @@ class Progess extends React.Component {
   }
 
   setLayout() {
-    window.dispatchEvent(
+    document.dispatchEvent(
       new CustomEvent("Killstreak:getConfig", {
         detail: JSON.stringify([
           [
@@ -69,14 +69,14 @@ class Progess extends React.Component {
   };
 
   componentDidMount() {
-    window.addEventListener("Killstreak:UpdateScore", this.updateScoreCallback);
+    document.addEventListener("Killstreak:UpdateScore", this.updateScoreCallback);
     if (process.env.NODE_ENV !== "production") {
       //this.setLayout();
     }
   }
 
   componentWillUnmount() {
-    window.removeEventListener(
+    document.removeEventListener(
       "Killstreak:UpdateScore",
       this.updateScoreCallback
     );
@@ -181,10 +181,10 @@ class Progess extends React.Component {
               fontSize: "x-large",
               flexBasis:"100%",
               position:"relative",
-              left:"14%"
+              left:"12%"
             }}
           >
-            {this.state.score}
+            {parseInt(this.state.score)}
           </div>
         {this.props.layout.length > 0 ?
         <Steps
@@ -198,12 +198,14 @@ class Progess extends React.Component {
             fontWeight: "100",
             transformOrigin:"0 0",
             marginTop:"5%",
-            marginBottom:"5%"
+            marginBottom:"5%",
+            flexBasis:"100%"
           }}
         >
           {this.props.layout.map((el, index) => {
             return (
               <Step
+                status={this.props.selectedStep-1 === index ? "error": undefined}
                 icon={this.getIcon(el,index,step)}
                 key={index}
                 title={el[3]}

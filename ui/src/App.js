@@ -16,6 +16,7 @@ class App extends React.Component {
       selectedKillstreaks: [],
       showKsButton: true,
       timers: [],
+      selectedStep : -10
     };
     this.toggle = this.toggle.bind(this);
     this.getAllKillstreaks = this.getAllKillstreaks.bind(this);
@@ -28,6 +29,7 @@ class App extends React.Component {
     this.onTimerComplete = this.onTimerComplete.bind(this);
     this.newTimer = this.newTimer.bind(this)
     this.showNotification = this.showNotification.bind(this)
+    this.selectedStep = this.selectedStep.bind(this)
   }
 
   clearAllTimers() {
@@ -152,6 +154,7 @@ class App extends React.Component {
 
   newTimer(e) {
     let timersN = this.state.timers;
+    console.log("New Timer: ",e.detail)
     timersN.push(JSON.parse(e.detail))
     console.log("new List", timersN)
     this.setState({
@@ -181,6 +184,11 @@ class App extends React.Component {
     this.setState({
       showKsButton: false,
     });
+  }
+  selectedStep(e){
+    this.setState({
+      selectedStep: parseInt(e.detail) 
+    })
   }
 
   componentDidMount() {
@@ -237,6 +245,12 @@ class App extends React.Component {
       this.showNotification,
       false
     );
+
+    document.addEventListener(
+      "Killstreak:UI:selectStep",
+      this.selectedStep,
+      false
+    );
   }
 
   componentWillUnmount() {
@@ -279,14 +293,20 @@ class App extends React.Component {
       this.showNotification,
       false
     );
+    document.removeEventListener(
+      "Killstreak:UI:selectStep",
+      this.selectedStep,
+      false
+    );
   }
 
   showNotification(e) {
+    console.log("Notification: ",e.detail)
     let obj = JSON.parse(e.detail)
     notification.open({
       message: obj.title,
       className: 'ksNotification',
-      duration: 3,
+      duration: 5,
       top: 72,
       closeIcon: <div></div>,
       description: obj.message,
@@ -329,6 +349,7 @@ class App extends React.Component {
           <Layout>
             <Sider className={"overallBackground"} width="30%">
               <Progress
+                selectedStep={this.state.selectedStep}
                 layout={this.getOriginalLayoutArray(
                   this.state.selectedKillstreaks
                 )}

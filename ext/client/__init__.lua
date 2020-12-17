@@ -2,7 +2,6 @@ local bindings = require("keybindings.lua")
 local conf = nil
 local step = -1
 local inUse = {false, false, false, false}
-local newEvent = true
 local keyUpThreshold = 30
 local curKeyUpEvents = 0
 local selectedKillstreaks = nil
@@ -12,6 +11,7 @@ Events:Subscribe(
     "Extension:Loaded",
     function()
         NetEvents:Subscribe("Killstreak:Client:getConf", getConf)
+        NetEvents:SendLocal("Killstreak:newClient", player)
     end
 )
 Events:Subscribe(
@@ -56,6 +56,20 @@ NetEvents:Subscribe(
 Events:Subscribe(
     "Killstreak:showNotification",
     function(messageObjJson)
+        messageObjJson = json.encode(messageObjJson)
+        WebUI:ExecuteJS(
+            'document.dispatchEvent(new CustomEvent("Killstreak:UI:showNotification",{detail:' ..
+                messageObjJson .. "}))"
+        )
+    end
+)
+
+NetEvents:Subscribe(
+    "Killstreak:showNotification",
+    function(messageObjJson)
+        messageObjJson = json.encode(messageObjJson)
+        print("new message")
+        print(messageObjJson)
         WebUI:ExecuteJS(
             'document.dispatchEvent(new CustomEvent("Killstreak:UI:showNotification",{detail:' ..
                 messageObjJson .. "}))"
@@ -101,26 +115,40 @@ Events:Subscribe(
     "Killstreak:selectedKillstreaks",
     function(ks)
         test = json.encode(ks)
-        print("ks test " .. test)
+        -- print("ks test " .. test)
         NetEvents:SendLocal("Killstreak:updatePlayerKS", json.decode(ks))
         decodeKs = json.decode(ks)
         selectedKillstreaks = decodeKs
-        WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. score .. '"}))')
+        calcStep(score)
+        WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. score .. '"}))')
     end
 )
 -- timerObjJson: JSON string from the timer object for the frontend {duration: number,text: string}
 Events:Subscribe(
     "Killstreak:newTimer",
     function(timerObjJson)
+        print(timerObjJson)
+        timerObjJson = json.encode(timerObjJson)
         WebUI:ExecuteJS(
-            'window.dispatchEvent(new CustomEvent("Killstreak:UI:newTimer",{detail:"' .. timerObjJson .. '"}))'
+            'document.dispatchEvent(new CustomEvent("Killstreak:UI:newTimer",{detail:' .. timerObjJson .. "}))"
+        )
+    end
+)
+
+-- timerObjJson: JSON string from the timer object for the frontend {duration: number,text: string}
+NetEvents:Subscribe(
+    "Killstreak:newTimer",
+    function(timerObjJson)
+        print(timerObjJson)
+        timerObjJson = json.encode(timerObjJson)
+        WebUI:ExecuteJS(
+            'document.dispatchEvent(new CustomEvent("Killstreak:UI:newTimer",{detail:' .. timerObjJson .. "}))"
         )
     end
 )
 
 -- Your mod get the following parameters in the Invoke Event:
 -- 1. Position of Killstreak 1-4
--- 2. Key who toggle the Killstreak
 Events:Subscribe(
     "Client:UpdateInput",
     function(delta)
@@ -130,39 +158,55 @@ Events:Subscribe(
         if disabledAction then
             return
         end
+
         for i, v in pairs(selectedKillstreaks) do
-            if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false and newEvent == true then
+            if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false then
+                print("key detected")
                 if i <= step then
+                    -- Check if another KS is currently in use
+                    used = nil
+                    for i, v in pairs(inUse) do
+                        if inUse[i] == true then
+                            used = i
+                        end
+                    end
+                    if used ~= nil then
+                        WebUI:ExecuteJS(
+                            'document.dispatchEvent(new CustomEvent("Killstreak:UI:selectStep",{detail:' ..
+                                tostring(-10) .. "}))"
+                        )
+                        -- Disable the aktive KS
+                        print("Disable because of a switch")
+                        Events:Dispatch(selectedKillstreaks[used][1] .. ":Disable", i)
+                        inUse[used] = false
+                    end
                     print("Activate")
-                    newEvent = false
                     print("Dispatched event " .. tostring(selectedKillstreaks[i][1]))
+                    WebUI:ExecuteJS(
+                        'document.dispatchEvent(new CustomEvent("Killstreak:UI:selectStep",{detail:' ..
+                            tostring(i) .. "}))"
+                    )
                     inUse[i] = true
-                    Events:Dispatch(selectedKillstreaks[i][1] .. ":Invoke", i, tonumber(v))
+                    Events:Dispatch(selectedKillstreaks[i][1] .. ":Invoke", i)
                     return
                 end
             end
-            if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == true and newEvent == true then
+            if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == true then
                 print("Disable")
                 Events:Dispatch(selectedKillstreaks[i][1] .. ":Disable", i)
+                WebUI:ExecuteJS(
+                    'document.dispatchEvent(new CustomEvent("Killstreak:UI:selectStep",{detail:' ..
+                        tostring(-10) .. "}))"
+                )
                 inUse[i] = false
-                newEvent = false
                 return
-            end
-            if InputManager:WentKeyUp(tonumber(bindings[i])) == false and newEvent == false then
-                --if curKeyUpEvents >= keyUpThreshold then
-                print("New Event")
-                newEvent = true
-            -- curKeyUpEvents = 0
-            --else
-            -- curKeyUpEvents = curKeyUpEvents + 1
-            --end
             end
         end
     end
 )
 
 function getConf(config)
-    print("Get conf " .. config)
+    -- print("Get conf " .. config)
     confResend = json.encode(config)
     WebUI:Init()
     WebUI:ExecuteJS(
@@ -173,49 +217,48 @@ function getConf(config)
     config = json.decode(config)
 end
 
+function calcStep(data)
+    count = 1
+    tempTable = {}
+    if selectedKillstreaks ~= nil then
+        tempTable = selectedKillstreaks
+    end
+    for _ in pairs(tempTable) do
+        count = count + 1
+    end
+    if count == 1 then
+        return
+    end
+    for i = 1, count, 1 do
+        if i + 1 == count then
+            step = 4
+            break
+        end
+
+        if i == 1 then
+            if tempTable[i][3] > data then
+                print("New Step minimal " .. tostring(0))
+                step = 0
+                break
+            end
+        end
+        if tempTable[i][3] <= data and data < tempTable[i + 1][3] then
+            print("New Step " .. tostring(i))
+            step = i
+            break
+        end
+        print(tostring(tempTable[i][3]) .. " | " .. tostring(data) .. " | " .. tostring(tempTable[i + 1][3]))
+    end
+end
+
 NetEvents:Subscribe(
     "Killstreak:ScoreUpdate",
     function(data)
         data = tonumber(data)
         score = data
-        WebUI:ExecuteJS('window.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')
+        WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')
         print("Got Data " .. tostring(data))
-        count = 1
-        tempTable = {}
-        if selectedKillstreaks ~= nil then
-            tempTable = selectedKillstreaks
-        end
-        for _ in pairs(tempTable) do
-            count = count + 1
-        end
-        if count == 1 then
-            return
-        end
-        for i = 1, count, 1 do
-            if i + 1 == count then
-                step = 4
-                break
-            end
-            
-            if i == 1 then
-                print(json.encode(tempTable))
-                if tempTable[i][3] > data then
-                    print("New Step minimal " .. tostring(0))
-                    step = 0
-                    break
-                end
-            end
-            if tempTable[i][3] <= data and data < tempTable[i + 1][3] then
-                print("New Step " .. tostring(i))
-                step = i
-                break
-            end
-            print(
-                tostring(tempTable[i][3]) ..
-                    " | " .. tostring(data) .. " | " .. tostring(tempTable[i + 1][3])
-            )
-        end
-        
+        calcStep(data)
     end
 )
 NetEvents:Subscribe(
@@ -234,6 +277,9 @@ Events:Subscribe(
         print("Client recievet step used")
         print("used Step " .. tostring(usedStep))
         print("inUse: " .. converted)
+        WebUI:ExecuteJS(
+            'document.dispatchEvent(new CustomEvent("Killstreak:UI:selectStep",{detail:' .. tostring(-10) .. "}))"
+        )
         inUse[usedStep] = false
         NetEvents:SendLocal("Killstreak:notifyServerUsedSteps", usedStep)
     end

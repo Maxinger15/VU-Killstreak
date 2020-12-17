@@ -32,9 +32,8 @@ The <your mod name in mod.json>:Invoke event is triggerd when the User has the p
 and pressed the declared button in the configuration.lua
 Parameters:
 - stepNr: The number of your killstreak (1-4 including)
-- keyboardKey: The key the user pressed to invoke your killstreak
 > ```lua
->Events:Subscribe("<your mod name>:Invoke",function(stepNr,keyboardKey)
+>Events:Subscribe("<your mod name>:Invoke",function(stepNr)
 >	-- Killstreak enabled. Enable UI if available
 >    Do things the killstreak should do
 >end)
