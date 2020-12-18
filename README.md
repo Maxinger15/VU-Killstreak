@@ -56,6 +56,7 @@ The timerObj in the JSON-String needs the following properties:
 - text: text displayed at the UI (best letters < 25 but not limited)
 > ```lua
 > Events:Dispatch("Killstreak:newTimer", timerObjJson)
+> NetEvents:SendTo("Killstreak:newTimer",player, timerObjJson)
 >```
 
 The Killstreak:showNotification event allows you to show a notification at the UI
@@ -67,15 +68,27 @@ The messageObj in the JSON-String needs the following properties:
 - message: string
 > ```lua
 > Events:Dispatch("Killstreak:showNotification", messageObjJson)
+> NetEvents:SendTo("Killstreak:showNotification",player, messageObjJson)
 >```
   
 Dispatch this event when the killstreak was used.
 This decreases the points of the player and adjusts the UI
 Parameter:
 - stepNr: the stepNr you got with the invoke event.
+- timeBased: boolean - blocks the use of your killstreaks till you invoke Killstreak:Finished
 > ```lua
-> Events:Dispatch("Killstreak:usedStep",stepNr)
+> Events:Dispatch("Killstreak:usedStep",stepNr,timeBased)
 > ```
+
+Dispatch this event only when you called Killstreak:usedStep with timeBased = true.
+Maybe nothing bad would happen if you do it anyways but just don't do it!
+This will allow the player to use your killstreak again.
+Parameter:
+- stepNr: the stepNr you got with the invoke event.
+> ```lua
+> Events:Dispatch("Killstreak:Finished",stepNr)
+> ```
+
 # Configuration
 ## Server
 In the Server folder you can find this configuration files.
