@@ -27,10 +27,10 @@ local conf = {
         "Press F to use",
       },
       {
-        "vu-artillerystrike",
+        "vu-ks-adrenalinerush",
         65,
-        450,
-        "Dummy 2",
+        170,
+        "Adrenaline rush",
         "Left %NR",
         "Press F to use",
       },

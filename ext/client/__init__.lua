@@ -2,6 +2,8 @@ local bindings = require("keybindings.lua")
 local conf = nil
 local step = -1
 local inUse = {false, false, false, false}
+-- blocks the use of time based killstreaks and prevent that is constantily shown in the ui
+local running = {false,false,false,false}
 local keyUpThreshold = 30
 local curKeyUpEvents = 0
 local selectedKillstreaks = nil
@@ -163,6 +165,10 @@ Events:Subscribe(
             if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false then
                 print("key detected")
                 if i <= step then
+                    -- quit if the current KS is still running
+                    if running[i] == true then
+                        break
+                    end
                     -- Check if another KS is currently in use
                     used = nil
                     for i, v in pairs(inUse) do
@@ -187,6 +193,7 @@ Events:Subscribe(
                             tostring(i) .. "}))"
                     )
                     inUse[i] = true
+                    running[i] = true
                     Events:Dispatch(selectedKillstreaks[i][1] .. ":Invoke", i)
                     return
                 end
@@ -270,9 +277,10 @@ NetEvents:Subscribe(
 
 -- invoke this to adjust the points your killstreak costs
 -- usedStep = index you got with the Invoke event (parameter 1)
+-- timeBased = set this to true to decrase the playe score but block the reuse of your killstreak till you call Events:Dispatch("Killstreak:Finished", curStep)
 Events:Subscribe(
     "Killstreak:usedStep",
-    function(usedStep)
+    function(usedStep,timeBased)
         converted = json.encode(inUse)
         print("Client recievet step used")
         print("used Step " .. tostring(usedStep))
@@ -281,6 +289,17 @@ Events:Subscribe(
             'document.dispatchEvent(new CustomEvent("Killstreak:UI:selectStep",{detail:' .. tostring(-10) .. "}))"
         )
         inUse[usedStep] = false
+        if timeBased == nil or timeBased == false then
+            running[usedStep] = false
+        end
+        
         NetEvents:SendLocal("Killstreak:notifyServerUsedSteps", usedStep)
+    end
+)
+
+Events:Subscribe(
+    "Killstreak:Finished",
+    function(usedStep)
+        running[usedStep] = false
     end
 )
