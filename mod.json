@@ -6,5 +6,6 @@
     "HasWebUI": true,
     "Dependencies": {
         "veniceext": "^1.0.0"
-    }
+    },
+    "Tags": ["killstreaks"]
 }

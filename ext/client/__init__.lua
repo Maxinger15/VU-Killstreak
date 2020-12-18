@@ -3,7 +3,7 @@ local conf = nil
 local step = -1
 local inUse = {false, false, false, false}
 -- blocks the use of time based killstreaks and prevent that is constantily shown in the ui
-local running = {false,false,false,false}
+local running = {false, false, false, false}
 local keyUpThreshold = 30
 local curKeyUpEvents = 0
 local selectedKillstreaks = nil
@@ -26,6 +26,20 @@ Events:Subscribe(
 )
 Events:Subscribe(
     "Level:Loaded",
+    function(levelName, gameMode)
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+    end
+)
+
+Events:Subscribe(
+    "Killstreak:disableIngameUI",
+    function(levelName, gameMode)
+        WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+    end
+)
+
+Events:Subscribe(
+    "Killstreak:enableIngameUI",
     function(levelName, gameMode)
         WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
     end
@@ -164,6 +178,9 @@ Events:Subscribe(
         for i, v in pairs(selectedKillstreaks) do
             if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false then
                 print("key detected")
+                print(tostring(i) .. " step " .. tostring(step))
+                print(json.encode(inUse))
+                print(json.encode(running))
                 if i <= step then
                     -- quit if the current KS is still running
                     if running[i] == true then
@@ -185,6 +202,7 @@ Events:Subscribe(
                         print("Disable because of a switch")
                         Events:Dispatch(selectedKillstreaks[used][1] .. ":Disable", i)
                         inUse[used] = false
+                        running[used] = false
                     end
                     print("Activate")
                     print("Dispatched event " .. tostring(selectedKillstreaks[i][1]))
@@ -206,6 +224,7 @@ Events:Subscribe(
                         tostring(-10) .. "}))"
                 )
                 inUse[i] = false
+                running[i] = false
                 return
             end
         end
@@ -280,7 +299,7 @@ NetEvents:Subscribe(
 -- timeBased = set this to true to decrase the playe score but block the reuse of your killstreak till you call Events:Dispatch("Killstreak:Finished", curStep)
 Events:Subscribe(
     "Killstreak:usedStep",
-    function(usedStep,timeBased)
+    function(usedStep, timeBased)
         converted = json.encode(inUse)
         print("Client recievet step used")
         print("used Step " .. tostring(usedStep))
@@ -292,7 +311,7 @@ Events:Subscribe(
         if timeBased == nil or timeBased == false then
             running[usedStep] = false
         end
-        
+
         NetEvents:SendLocal("Killstreak:notifyServerUsedSteps", usedStep)
     end
 )
@@ -301,5 +320,42 @@ Events:Subscribe(
     "Killstreak:Finished",
     function(usedStep)
         running[usedStep] = false
+    end
+)
+function resetState()
+    step = -1
+    inUse = {false, false, false, false}
+    -- blocks the use of time based killstreaks and prevent that is constantily shown in the ui
+    running = {false, false, false, false}
+    score = 0
+    disabledAction = false
+    WebUI:ExecuteJS(
+            'document.dispatchEvent(new CustomEvent("Killstreak:UI:selectStep",{detail:' .. tostring(-10) .. "}))"
+        )
+    WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. tostring(0) .. '"}))')
+end
+
+Events:Subscribe(
+    "Server:RoundOver",
+    self,
+    function()
+        for i, v in pairs(self.playerKillstreakScore) do
+            self.playerKillstreakScore[i] = 0
+            NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:getPlayerById(i), tostring(0))
+        end
+    end
+)
+
+Events:Subscribe(
+    "Server:RoundReset",
+    self,
+    function()
+        for i, v in pairs(self.playerScores) do
+            self.playerScores[i] = 0
+        end
+        for i, v in pairs(self.playerKillstreakScore) do
+            self.playerKillstreakScore[i] = 0
+            NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:getPlayerById(i), tostring(0))
+        end
     end
 )
