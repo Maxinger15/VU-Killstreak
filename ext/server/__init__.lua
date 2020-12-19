@@ -101,7 +101,6 @@ function Killstreak:OnLoad()
 end
 
 function Killstreak:sendConfToNewClient(player)
-    print("new player ".. tostring(player.id))
     if self.playerKillstreaks[player.id] == nil then
         self.playerKillstreaks[player.id] = {}
     end
