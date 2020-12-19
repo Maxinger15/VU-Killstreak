@@ -35,19 +35,19 @@ function Killstreak:__init()
         end
         for i,v in pairs(self.playerKillstreakScore)do
             self.playerKillstreakScore[i] = 0
-            NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:getPlayerById(i), tostring(0))
+            
         end
+        NetEvents:Broadcast("Killstreak:ScoreUpdate", tostring(0))
     end)
     Events:Subscribe("Player:Authenticated",self,function(player)
         if self.playerKillstreakScore[player.id] ~= nil then
-            NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:getPlayerById(i), tostring(self.playerKillstreakScore[player.id]))
+            NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:GetPlayerById(i), tostring(self.playerKillstreakScore[player.id]))
         end
     
     end)
 
-    if settings.resetOnDeath then
-        Events:Subscribe("Player:Killed", self, self.resetScore)
-    end
+    Events:Subscribe("Player:Killed", self, self.playerKilled)
+    Events:Subscribe("Player:ManDownRevived",self,self.playerRevived)
     if settings.ignoreScoreInVehicle then
         Events:Subscribe("Vehicle:Enter", self, self.disableScore)
         Events:Subscribe("Vehicle:Exit", self, self.enableScore)
@@ -62,6 +62,18 @@ end
 function Killstreak:enableScore(vehicle, player)
     print("Enabled score for " .. tostring(player.name))
     self.playerScoreDisabled[player.id] = false
+end
+
+function Killstreak:playerKilled(player)
+    if settings.resetOnDeath then
+         self.resetScore()
+    end
+    NetEvents:SendTo("Killstreak:DisableInteraction",player)
+    
+end
+
+function Killstreak:playerRevived(player)
+    NetEvents:SendTo("Killstreak:EnableInteraction",player)
 end
 
 function Killstreak:resetScore(player, punisher, position, weapon, isRoadKill, isHeadShot, wasVictimInREviveState)

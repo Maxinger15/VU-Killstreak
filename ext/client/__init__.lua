@@ -101,6 +101,20 @@ Events:Subscribe(
     end
 )
 
+function disableInteractions()
+    disabledAction = true
+    WebUI:ExecuteJS(
+        'document.dispatchEvent(new CustomEvent("Killstreak:UI:selectStep",{detail:' .. tostring(-10) .. "}))"
+    )
+    for i, v in pairs(inUse) do
+        if inUse[i] == true then
+            inUse[i] = false
+            running[i] = false
+            Events:Dispatch(selectedKillstreaks[i][1] .. ":Disable", i)
+        end
+    end
+end
+
 Hooks:Install(
     "UI:PushScreen",
     1,
@@ -111,8 +125,35 @@ Hooks:Install(
         end
 
         if screen.name == "UI/Flow/Screen/KillScreen" then
-            disabledAction = true
+            print("disable interactions screen")
+            disableInteractions()
         end
+    end
+)
+
+NetEvents:Subscribe(
+    "Killstreak:DisableInteraction",
+    function()
+        print("Disable interactions")
+        disableInteractions()
+    end
+)
+Events:Subscribe('Soldier:HealthAction', function(soldier, action)
+    if action == HealthStateAction.OnManDown then
+        if soldier.player ~= nil then
+            if player.id == PlayerManager:GetLocalPlayer().id then
+                disableInteractions()
+            end
+        else
+            print("Player of soldier is nil")
+        end
+    end
+end)
+
+NetEvents:Subscribe(
+    "Killstreak:EnableInteraction",
+    function()
+        disabledAction = false
     end
 )
 
@@ -330,9 +371,11 @@ function resetState()
     score = 0
     disabledAction = false
     WebUI:ExecuteJS(
-            'document.dispatchEvent(new CustomEvent("Killstreak:UI:selectStep",{detail:' .. tostring(-10) .. "}))"
-        )
-    WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. tostring(0) .. '"}))')
+        'document.dispatchEvent(new CustomEvent("Killstreak:UI:selectStep",{detail:' .. tostring(-10) .. "}))"
+    )
+    WebUI:ExecuteJS(
+        'document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. tostring(0) .. '"}))'
+    )
 end
 
 Events:Subscribe(
