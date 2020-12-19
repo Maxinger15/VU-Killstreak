@@ -10,6 +10,18 @@ local selectedKillstreaks = nil
 local score = 0
 local disabledAction = false
 local uiHidden = false
+
+NetEvents:Subscribe(
+    "Killstreak:ScoreUpdate",
+    function(data)
+        data = tonumber(data)
+        score = data
+        print("Got Data " .. tostring(data))
+        calcStep(data)
+        WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')    
+    end
+)
+
 Events:Subscribe(
     "Extension:Loaded",
     function()
@@ -302,6 +314,9 @@ function getConf(config)
     WebUI:ExecuteJS(
         'document.dispatchEvent(new CustomEvent("Killstreak:UI:getAllKillstreaks",{detail:' .. confResend .. "}))"
     )
+    WebUI:ExecuteJS(
+        'document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. tostring(score) .. '"}))'
+    )
     WebUI:Show()
     WebUI:DisableKeyboard()
     config = json.decode(config)
@@ -341,16 +356,7 @@ function calcStep(data)
     end
 end
 
-NetEvents:Subscribe(
-    "Killstreak:ScoreUpdate",
-    function(data)
-        data = tonumber(data)
-        score = data
-        WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. data .. '"}))')
-        print("Got Data " .. tostring(data))
-        calcStep(data)
-    end
-)
+
 NetEvents:Subscribe(
     "Killstreak:StepUpdate",
     function(data)
