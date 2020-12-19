@@ -9,6 +9,7 @@ local curKeyUpEvents = 0
 local selectedKillstreaks = nil
 local score = 0
 local disabledAction = false
+local uiHidden = false
 Events:Subscribe(
     "Extension:Loaded",
     function()
@@ -120,8 +121,26 @@ Hooks:Install(
     1,
     function(hook, screen, priority, parentGraph, stateNodeGuid)
         local screen = UIGraphAsset(screen)
+        --print(screen.name)
+        -- UI/Flow/Screen/EORWinningTeamScreen
+        -- UI/Flow/Screen/EORLoosingTeamScreen
+        if screen.name == "UI/Flow/Screen/EORWinningTeamScreen" then
+            print("hide web ui --------------------")
+            WebUI:Hide()
+            WebUI:ExecuteJS(
+                'document.dispatchEvent(new CustomEvent("Killstreak:UI:selectStep",{detail:' .. tostring(-10) .. "}))"
+            )
+            WebUI:ExecuteJS('document.dispatchEvent(new CustomEvent("Killstreak:UpdateScore",{detail:"' .. tostring(0) .. '"}))')
+            uiHidden = true
+        end
+
         if screen.name == "UI/Flow/Screen/SpawnScreenPC" then
             WebUI:ExecuteJS('document.dispatchEvent(new Event("Killstreak:UI:showKsButton"))')
+            if uiHidden == true then
+                print("show ui ---")
+                WebUI:Show()
+                uiHidden = false
+            end
         end
 
         if screen.name == "UI/Flow/Screen/KillScreen" then
@@ -138,17 +157,20 @@ NetEvents:Subscribe(
         disableInteractions()
     end
 )
-Events:Subscribe('Soldier:HealthAction', function(soldier, action)
-    if action == HealthStateAction.OnManDown then
-        if soldier.player ~= nil then
-            if player.id == PlayerManager:GetLocalPlayer().id then
-                disableInteractions()
+Events:Subscribe(
+    "Soldier:HealthAction",
+    function(soldier, action)
+        if action == HealthStateAction.OnManDown then
+            if soldier.player ~= nil then
+                if player.id == PlayerManager:GetLocalPlayer().id then
+                    disableInteractions()
+                end
+            else
+                print("Player of soldier is nil")
             end
-        else
-            print("Player of soldier is nil")
         end
     end
-end)
+)
 
 NetEvents:Subscribe(
     "Killstreak:EnableInteraction",
@@ -276,6 +298,7 @@ function getConf(config)
     -- print("Get conf " .. config)
     confResend = json.encode(config)
     WebUI:Init()
+    
     WebUI:ExecuteJS(
         'document.dispatchEvent(new CustomEvent("Killstreak:UI:getAllKillstreaks",{detail:' .. confResend .. "}))"
     )
