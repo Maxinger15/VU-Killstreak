@@ -1,6 +1,5 @@
 import React from "react";
 import { Steps,Button } from "antd";
-import KsTimer from "./kstimer/kstimer"
 import KsTimerList from "./kstimer/kstimerlist";
 const { Step } = Steps;
 class Progess extends React.Component {
@@ -223,7 +222,7 @@ class Progess extends React.Component {
         {this.props.showButton ? 
         <div style={{flexBasis:"100%",alignContent:"center"}}>
           <Button type="ghost" onClick={this.props.showUi} className="ksButton">
-            Killstreaks
+            Select killstreaks
         </Button>
         </div>
         :

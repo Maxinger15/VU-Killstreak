@@ -184,6 +184,10 @@ export default class KsPicker extends React.Component {
                 </List.Item>
               )}
             />
+            <Row>
+              <Col span={6} style={{color: "white",fontSize:14}} ><div>Developed by Maxinger15</div></Col>
+              <Col span={18}></Col>
+            </Row>
           </Col>
         </Row>
       </div>

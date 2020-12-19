@@ -307,7 +307,7 @@ class App extends React.Component {
       message: obj.title,
       className: 'ksNotification',
       duration: 5,
-      top: 72,
+      top: 139,
       closeIcon: <div></div>,
       description: obj.message,
       placement: "topRight",
