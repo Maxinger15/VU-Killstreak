@@ -126,8 +126,11 @@ class Progess extends React.Component {
     }
     
   }
-  createDescription(el) {
+  createDescription(el,index) {
     let str = el[4];
+    if(this.props.selectedStep-1 === index){
+      return el[5]
+    }
     if (str == undefined) {
       return "";
     }
@@ -135,7 +138,7 @@ class Progess extends React.Component {
     //Hier kann Use It Animation eingefügt werden
     if (erg <= 0) {
       erg = 0;
-      return el[5];
+      return el[6];
     }
     return str.replace("%NR", erg);
   }
@@ -209,7 +212,8 @@ class Progess extends React.Component {
                 key={index}
                 title={el[3]}
                 description={this.createDescription(
-                  el
+                  el,
+                  index
                 )}
                 style={{ color: "white",width:"fit-content" }}
               />
