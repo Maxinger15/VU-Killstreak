@@ -104,7 +104,8 @@ The file looks like that:
 >        150, -- the cost of the killstreak (can/should be changed)
 >        "Grenades", -- The name that is shown in the UI
 >        "Left %NR", -- The description that is shown in the UI.
->        "Press F to use", -- replaces the description when the killstreak is ready to use
+>        "Press F to use", -- displayed when a user activates the killstreak
+         "Your Killstreak is ready", -- replaces the description when the killstreak is ready to use
 >      },
 >      {
 >        "vu-artillerystrike",
@@ -113,6 +114,7 @@ The file looks like that:
 >        "Health",
 >        "Left %NR",
 >        "Press F to use",
+         "Your Killstreak is ready"
 >      },
 >      ...
 >}

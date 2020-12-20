@@ -9,6 +9,7 @@ local conf = {
         "Artillery",
         "Left %NR",
         "Press F9 to use",
+        "Dummy Description"
       },
       {
         "vu-ks-grenades",
@@ -17,6 +18,7 @@ local conf = {
         "Grenades",
         "Left %NR",
         "Press F9 to use",
+        "Dummy Description"
       },
       {
         "vu-ks-smokescreen",
@@ -25,6 +27,7 @@ local conf = {
         "Smokescreen",
         "Left %NR",
         "Press F9 to use",
+        "Dummy Description"
       },
       {
         "vu-ks-adrenalinerush",
@@ -33,6 +36,7 @@ local conf = {
         "Adrenaline rush",
         "Left %NR",
         "Press F9 to use",
+        "Dummy Description"
       },
       {
         "vu-artillerystrike",
@@ -41,6 +45,7 @@ local conf = {
         "Dummy 3",
         "Left %NR",
         "Press F9 to use",
+        "Dummy Description"
       },
       {
         "vu-artillerystrike",
@@ -49,6 +54,7 @@ local conf = {
         "Dummy 4",
         "Left %NR",
         "Press F9 to use",
+        "Dummy Description"
       },
       {
         "vu-artillerystrike",
@@ -57,6 +63,7 @@ local conf = {
         "Dummy 5",
         "Left %NR",
         "Press F9 to use",
+        "Dummy Description"
       },
       {
         "vu-artillerystrike",
@@ -65,6 +72,7 @@ local conf = {
         "Dummy 6",
         "Left %NR",
         "Press F9 to use",
+        "Dummy Description"
       },
       {
         "vu-artillerystrike",
@@ -73,6 +81,7 @@ local conf = {
         "Dummy 7",
         "Left %NR",
         "Press F9 to use",
+        "Dummy Description"
       },
 }
 
