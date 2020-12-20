@@ -5,6 +5,7 @@ import "antd/dist/antd.css";
 import "./App.css";
 import Progress from "./components/progress";
 import KsPicker from "./components/kspicker";
+import RadialMenu from "./components/radialMenu/radialMenu";
 const { Header, Sider, Content } = Layout;
 
 class App extends React.Component {
@@ -16,7 +17,8 @@ class App extends React.Component {
       selectedKillstreaks: [],
       showKsButton: true,
       timers: [],
-      selectedStep : -10
+      selectedStep: -10,
+      menuVisible: true,
     };
     this.toggle = this.toggle.bind(this);
     this.getAllKillstreaks = this.getAllKillstreaks.bind(this);
@@ -27,9 +29,9 @@ class App extends React.Component {
     this.hideKsButton = this.hideKsButton.bind(this);
     this.clearAllTimers = this.clearAllTimers.bind(this);
     this.onTimerComplete = this.onTimerComplete.bind(this);
-    this.newTimer = this.newTimer.bind(this)
-    this.showNotification = this.showNotification.bind(this)
-    this.selectedStep = this.selectedStep.bind(this)
+    this.newTimer = this.newTimer.bind(this);
+    this.showNotification = this.showNotification.bind(this);
+    this.selectedStep = this.selectedStep.bind(this);
   }
 
   clearAllTimers() {
@@ -46,41 +48,19 @@ class App extends React.Component {
       }
     });
     if (!notFinished) {
-      this.clearAllTimers()
+      this.clearAllTimers();
     } else {
       this.setState({
         timers: this.state.timers,
       });
     }
-
   }
 
   getTestData() {
     return [
-      [
-        "vu-artillerystrike",
-        65,
-        150,
-        "Grenades",
-        "Left %NR",
-        "Press F to use",
-      ],
-      [
-        "vu-artillerystrike",
-        65,
-        250,
-        "Health",
-        "Left %NR",
-        "Press F to use",
-      ],
-      [
-        "vu-artillerystrike",
-        65,
-        350,
-        "Ac130",
-        "Left %NR",
-        "Press F to use",
-      ],
+      ["vu-artillerystrike", 65, 150, "Grenades", "Left %NR", "Press F to use"],
+      ["vu-artillerystrike", 65, 250, "Health", "Left %NR", "Press F to use"],
+      ["vu-artillerystrike", 65, 350, "Ac130", "Left %NR", "Press F to use"],
       [
         "vu-artillerystrike",
         65,
@@ -97,14 +77,7 @@ class App extends React.Component {
         "Left %NR",
         "Press F to use",
       ],
-      [
-        "vu-artillerystrike",
-        65,
-        650,
-        "low boom",
-        "Left %NR",
-        "Press F to use",
-      ],
+      ["vu-artillerystrike", 65, 650, "low boom", "Left %NR", "Press F to use"],
       [
         "vu-artillerystrike",
         65,
@@ -154,12 +127,12 @@ class App extends React.Component {
 
   newTimer(e) {
     let timersN = this.state.timers;
-    console.log("New Timer: ",e.detail)
-    timersN.push(JSON.parse(e.detail))
-    console.log("new List", timersN)
+    console.log("New Timer: ", e.detail);
+    timersN.push(JSON.parse(e.detail));
+    console.log("new List", timersN);
     this.setState({
-      timers: timersN
-    })
+      timers: timersN,
+    });
   }
 
   showUi() {
@@ -185,10 +158,10 @@ class App extends React.Component {
       showKsButton: false,
     });
   }
-  selectedStep(e){
+  selectedStep(e) {
     this.setState({
-      selectedStep: parseInt(e.detail) 
-    })
+      selectedStep: parseInt(e.detail),
+    });
   }
 
   componentDidMount() {
@@ -234,11 +207,7 @@ class App extends React.Component {
       this.hideKsButton,
       false
     );
-    document.addEventListener(
-      "Killstreak:UI:newTimer",
-      this.newTimer,
-      false
-    );
+    document.addEventListener("Killstreak:UI:newTimer", this.newTimer, false);
 
     document.addEventListener(
       "Killstreak:UI:showNotification",
@@ -301,11 +270,11 @@ class App extends React.Component {
   }
 
   showNotification(e) {
-    console.log("Notification: ",e.detail)
-    let obj = JSON.parse(e.detail)
+    console.log("Notification: ", e.detail);
+    let obj = JSON.parse(e.detail);
     notification.open({
       message: obj.title,
-      className: 'ksNotification',
+      className: "ksNotification",
       duration: 5,
       top: 139,
       closeIcon: <div></div>,
@@ -345,7 +314,10 @@ class App extends React.Component {
     return (
       <>
         <Layout style={{ height: "100vh" }} className={"overallBackground"}>
-          <Header className={"overallBackground"} style={{ height: "15%" }}></Header>
+          <Header
+            className={"overallBackground"}
+            style={{ height: "15%" }}
+          ></Header>
           <Layout>
             <Sider className={"overallBackground"} width="30%">
               <Progress
@@ -400,6 +372,27 @@ class App extends React.Component {
                 }}
                 onCloseButton={this.hideUi}
               />
+            </div>
+          </div>
+        ) : null}
+        {this.state.menuVisible ? (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              top: "0px",
+              left: "0px",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: "43%",
+                left: "46%",
+              }}
+            >
+              <RadialMenu />
             </div>
           </div>
         ) : null}
