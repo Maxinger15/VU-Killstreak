@@ -2,6 +2,8 @@ local conf = require("configuration.lua")
 local settings = require("settings.lua")
 local outputs = 0
 local debug = true
+
+local lastOut = 0
 class "Killstreak"
 
 function Killstreak:__init()
@@ -17,37 +19,51 @@ function Killstreak:__init()
     NetEvents:Subscribe("Killstreak:notifyServerUsedSteps", self, self.usedSteps)
     NetEvents:Subscribe("Killstreak:updatePlayerKS", self, self.updatePlayerKS)
 
-    Events:Subscribe("Server:RoundOver",self, function()
-        NetEvents:Broadcast("Killstreak:hideAll")
-        for i,v in pairs(self.playerScores)do
-            self.playerScores[i] = 0
+    Events:Subscribe(
+        "Server:RoundOver",
+        self,
+        function()
+            NetEvents:Broadcast("Killstreak:hideAll")
+            for i, v in pairs(self.playerScores) do
+                self.playerScores[i] = 0
+            end
+            for i, v in pairs(self.playerKillstreakScore) do
+                self.playerKillstreakScore[i] = 0
+                NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:getPlayerById(i), tostring(0))
+            end
         end
-        for i,v in pairs(self.playerKillstreakScore)do
-            self.playerKillstreakScore[i] = 0
-            NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:getPlayerById(i), tostring(0))
-        end
-    end)
+    )
 
-    Events:Subscribe("Server:RoundReset",self, function()
-        NetEvents:Broadcast("Killstreak:hideAll")
-        for i,v in pairs(self.playerScores)do
-            self.playerScores[i] = 0
+    Events:Subscribe(
+        "Server:RoundReset",
+        self,
+        function()
+            NetEvents:Broadcast("Killstreak:hideAll")
+            for i, v in pairs(self.playerScores) do
+                self.playerScores[i] = 0
+            end
+            for i, v in pairs(self.playerKillstreakScore) do
+                self.playerKillstreakScore[i] = 0
+            end
+            NetEvents:Broadcast("Killstreak:ScoreUpdate", tostring(0))
         end
-        for i,v in pairs(self.playerKillstreakScore)do
-            self.playerKillstreakScore[i] = 0
-            
+    )
+    Events:Subscribe(
+        "Player:Authenticated",
+        self,
+        function(player)
+            if self.playerKillstreakScore[player.id] ~= nil then
+                NetEvents:SendTo(
+                    "Killstreak:ScoreUpdate",
+                    PlayerManager:GetPlayerById(i),
+                    tostring(self.playerKillstreakScore[player.id])
+                )
+            end
         end
-        NetEvents:Broadcast("Killstreak:ScoreUpdate", tostring(0))
-    end)
-    Events:Subscribe("Player:Authenticated",self,function(player)
-        if self.playerKillstreakScore[player.id] ~= nil then
-            NetEvents:SendTo("Killstreak:ScoreUpdate", PlayerManager:GetPlayerById(i), tostring(self.playerKillstreakScore[player.id]))
-        end
-    
-    end)
+    )
 
     Events:Subscribe("Player:Killed", self, self.playerKilled)
-    Events:Subscribe("Player:ManDownRevived",self,self.playerRevived)
+    Events:Subscribe("Player:ManDownRevived", self, self.playerRevived)
     if settings.ignoreScoreInVehicle then
         Events:Subscribe("Vehicle:Enter", self, self.disableScore)
         Events:Subscribe("Vehicle:Exit", self, self.enableScore)
@@ -66,14 +82,13 @@ end
 
 function Killstreak:playerKilled(player)
     if settings.resetOnDeath then
-         self.resetScore()
+        self.resetScore()
     end
-    NetEvents:SendTo("Killstreak:DisableInteraction",player)
-    
+    NetEvents:SendTo("Killstreak:DisableInteraction", player)
 end
 
 function Killstreak:playerRevived(player)
-    NetEvents:SendTo("Killstreak:EnableInteraction",player)
+    NetEvents:SendTo("Killstreak:EnableInteraction", player)
 end
 
 function Killstreak:resetScore(player, punisher, position, weapon, isRoadKill, isHeadShot, wasVictimInREviveState)
@@ -108,7 +123,7 @@ function Killstreak:sendConfToNewClient(player)
         self.playerScoreDisabled[player.id] = false
     end
     if self.playerKillstreakScore[player.id] ~= nil and self.playerKillstreakScore[player.id] ~= 0 then
-        print("Sending score to known player: ".. tostring(self.playerKillstreakScore[player.id]))
+        print("Sending score to known player: " .. tostring(self.playerKillstreakScore[player.id]))
         NetEvents:SendTo("Killstreak:ScoreUpdate", player, tostring(self.playerKillstreakScore[player.id]))
     end
     NetEvents:SendTo("Killstreak:Client:getConf", player, json.encode(conf))
@@ -125,6 +140,9 @@ end
 
 function Killstreak:OnPlayerLeft(player)
     self.playerKillstreaks[player.id] = nil
+    self.playerScoreDisabled[player.id] = false
+    self.playerScores[player.id] = nil
+    self.playerKillstreakScore[player.id] = nil
     return
 end
 
@@ -148,11 +166,11 @@ function Killstreak:OnPlayerUpdate(player, deltaTime)
     if not player.hasSoldier then
         return
     end
+    
     if self.playerScores[player.id] ~= nil and self.playerScoreDisabled[player.id] then
         if player.score > self.playerScores[player.id] then
-            
             self.playerScores[player.id] = player.score
-            print("new player score: ".. tostring(self.playerScores[player.id]))
+            print("new player score: " .. tostring(self.playerScores[player.id]))
         end
         return
     end
@@ -170,7 +188,19 @@ function Killstreak:OnPlayerUpdate(player, deltaTime)
         self.playerScores[player.id] = player.score
         modified = true
     end
+    if lastOut == 130 then
+        print("...................")
 
+        print(tostring(self.playerScores[player.id]))
+        print(tostring(self.playerScoreDisabled[player.id]))
+        print(tostring(self.playerKillstreakScore[player.id]))
+        print(tostring(modified))
+        print(tostring(player.score))
+        print("...................")
+        lastOut = 0
+    else
+        lastOut = lastOut + 1
+    end
     if modified and self.playerKillstreakScore[player.id] ~= nil then
         print(
             "Player " ..
@@ -184,18 +214,21 @@ function Killstreak:OnPlayerUpdate(player, deltaTime)
 end
 
 if debug then
-
-    Events:Subscribe("Player:Chat",function(player, recipientMask, message)
-    if message == "!timertest" then
-        NetEvents:SendTo("Killstreak:newTimer",player,json.encode({duration = 40, text="Test Timer"}))
-    end
-    if message == "!mestest" then
-        NetEvents:SendTo("Killstreak:showNotification",player,json.encode({message = "Test Message", title="Test Title"}))
-    end
-    
-    
-    end)
-
+    Events:Subscribe(
+        "Player:Chat",
+        function(player, recipientMask, message)
+            if message == "!timertest" then
+                NetEvents:SendTo("Killstreak:newTimer", player, json.encode({duration = 40, text = "Test Timer"}))
+            end
+            if message == "!mestest" then
+                NetEvents:SendTo(
+                    "Killstreak:showNotification",
+                    player,
+                    json.encode({message = "Test Message", title = "Test Title"})
+                )
+            end
+        end
+    )
 end
 
 g_KillStreakServer = Killstreak()
