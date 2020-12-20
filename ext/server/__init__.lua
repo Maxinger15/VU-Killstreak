@@ -188,19 +188,6 @@ function Killstreak:OnPlayerUpdate(player, deltaTime)
         self.playerScores[player.id] = player.score
         modified = true
     end
-    if lastOut == 130 then
-        print("...................")
-
-        print(tostring(self.playerScores[player.id]))
-        print(tostring(self.playerScoreDisabled[player.id]))
-        print(tostring(self.playerKillstreakScore[player.id]))
-        print(tostring(modified))
-        print(tostring(player.score))
-        print("...................")
-        lastOut = 0
-    else
-        lastOut = lastOut + 1
-    end
     if modified and self.playerKillstreakScore[player.id] ~= nil then
         print(
             "Player " ..
