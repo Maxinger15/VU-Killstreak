@@ -1,6 +1,9 @@
 # VU-Killstreak
 Core mod for Killstreaks in Battlefield 3.
 
+## Attention ! please adjust the settings to your server. It is not recommended to use the default values !
+## See [here](#configuration) how you can do this
+
 This mod adds the UI and the logic to interact with killstreaks.
 The UI is made with React. To develop you need NodeJS and npm installed on you System.
 On first use go into the UI Folder and type in the command line "npm install" to install all dependencies
