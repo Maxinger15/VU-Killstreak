@@ -1,6 +1,9 @@
 # VU-Killstreak
 Core mod for Killstreaks in Battlefield 3.
 
+## Attention ! please adjust the settings to your server. It is not recommended to use the default values !
+## See [here](#configuration) how you can do this
+
 This mod adds the UI and the logic to interact with killstreaks.
 The UI is made with React. To develop you need NodeJS and npm installed on you System.
 On first use go into the UI Folder and type in the command line "npm install" to install all dependencies
@@ -13,9 +16,9 @@ then you can run the UI on your local System with "npm run start"
 ## Killstreak-Mods:
 > Killstreaks only work if you load them in the ModList.txt
 - [Artillery Strike](https://github.com/Maxinger15/vu-artillerystrike)
-- [Tactical Missile (WIP)](https://github.com/Maxinger15/vu-tactical-missile)
 - [Grenade restock](https://github.com/Maxinger15/vu-ks-grenades)
 - [Smokescreen](https://github.com/Maxinger15/vu-ks-smokescreen)
+- [AdrenalineRush](https://github.com/Maxinger15/vu-ks-adrenalinerush)
 ## Develop killstreaks:
 
 ### Defaults:
@@ -105,7 +108,7 @@ The file looks like that:
 >        "Grenades", -- The name that is shown in the UI
 >        "Left %NR", -- The description that is shown in the UI.
 >        "Press F to use", -- displayed when a user activates the killstreak
-         "Your Killstreak is ready", -- replaces the description when the killstreak is ready to use
+>        "Your Killstreak is ready", -- replaces the description when the killstreak is ready to use
 >      },
 >      {
 >        "vu-artillerystrike",
@@ -114,7 +117,7 @@ The file looks like that:
 >        "Health",
 >        "Left %NR",
 >        "Press F to use",
-         "Your Killstreak is ready"
+>         "Your Killstreak is ready"
 >      },
 >      ...
 >}

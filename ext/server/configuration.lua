@@ -5,84 +5,39 @@ local conf = {
     {
         "vu-artillerystrike",
         InputDeviceKeys.IDK_F5,
-        150,
+        7000,
         "Artillery",
         "Left %NR",
         "Press F9 to use",
-        "Dummy Description"
+        "Ready to use"
       },
       {
         "vu-ks-grenades",
         65,
-        200,
+        2000,
         "Grenades",
         "Left %NR",
         "Press F9 to use",
-        "Dummy Description"
+        "Ready to use"
       },
       {
         "vu-ks-smokescreen",
         65,
-        350,
+        5500,
         "Smokescreen",
         "Left %NR",
         "Press F9 to use",
-        "Dummy Description"
+        "Ready to use"
       },
       {
         "vu-ks-adrenalinerush",
         65,
-        170,
+        3000,
         "Adrenaline rush",
         "Left %NR",
         "Press F9 to use",
-        "Dummy Description"
-      },
-      {
-        "vu-artillerystrike",
-        65,
-        550,
-        "Dummy 3",
-        "Left %NR",
-        "Press F9 to use",
-        "Dummy Description"
-      },
-      {
-        "vu-artillerystrike",
-        65,
-        650,
-        "Dummy 4",
-        "Left %NR",
-        "Press F9 to use",
-        "Dummy Description"
-      },
-      {
-        "vu-artillerystrike",
-        65,
-        750,
-        "Dummy 5",
-        "Left %NR",
-        "Press F9 to use",
-        "Dummy Description"
-      },
-      {
-        "vu-artillerystrike",
-        65,
-        850,
-        "Dummy 6",
-        "Left %NR",
-        "Press F9 to use",
-        "Dummy Description"
-      },
-      {
-        "vu-artillerystrike",
-        65,
-        850,
-        "Dummy 7",
-        "Left %NR",
-        "Press F9 to use",
-        "Dummy Description"
-      },
+        "Ready to use"
+      }
 }
 
 
