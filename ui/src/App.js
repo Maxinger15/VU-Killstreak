@@ -34,6 +34,8 @@ class App extends React.Component {
     this.newTimer = this.newTimer.bind(this);
     this.showNotification = this.showNotification.bind(this);
     this.selectedStep = this.selectedStep.bind(this);
+    this.showMenu = this.showMenu.bind(this)
+    this.hideMenu = this.hideMenu.bind(this)
   }
   updateScoreCallback = (e) => {
     if(e.detail < 0){
@@ -178,6 +180,16 @@ class App extends React.Component {
       selectedStep: parseInt(e.detail),
     });
   }
+  hideMenu(){
+    this.setState({
+      menuVisible: false
+    })
+  }
+  showMenu(){
+    this.setState({
+      menuVisible: true
+    })
+  }
 
   componentDidMount() {
     if (process.env.NODE_ENV !== "production") {
@@ -235,6 +247,17 @@ class App extends React.Component {
       this.selectedStep,
       false
     );
+
+    document.addEventListener(
+      "Killstreak:UI:showMenu",
+      this.showMenu,
+      false
+    );
+    document.addEventListener(
+      "Killstreak:UI:hideMenu",
+      this.hideMenu,
+      false
+    );
   }
 
   componentWillUnmount() {
@@ -283,6 +306,16 @@ class App extends React.Component {
     document.removeEventListener(
       "Killstreak:UI:selectStep",
       this.selectedStep,
+      false
+    );
+    document.removeEventListener(
+      "Killstreak:UI:showMenu",
+      this.showMenu,
+      false
+    );
+    document.removeEventListener(
+      "Killstreak:UI:hideMenu",
+      this.hideMenu,
       false
     );
   }

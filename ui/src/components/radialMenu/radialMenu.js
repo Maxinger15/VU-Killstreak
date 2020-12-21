@@ -2,7 +2,6 @@ import React from "react";
 import RadialRender from "./RadialRender";
 import { Button } from "antd";
 import "./radial.css";
-import { RightCircleFilled } from "@ant-design/icons";
 export default class RadialMenu extends React.Component {
   constructor(props) {
     super(props);
