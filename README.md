@@ -18,6 +18,7 @@ then you can run the UI on your local System with "npm run start"
 - [Artillery Strike](https://github.com/Maxinger15/vu-artillerystrike)
 - [Grenade restock](https://github.com/Maxinger15/vu-ks-grenades)
 - [Smokescreen](https://github.com/Maxinger15/vu-ks-smokescreen)
+- [AdrenalineRush](https://github.com/Maxinger15/vu-ks-adrenalinerush)
 ## Develop killstreaks:
 
 ### Defaults:
