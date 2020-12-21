@@ -1,7 +1,15 @@
-local conf = require("configuration.lua")
+
 local settings = require("settings.lua")
 local outputs = 0
 local debug = true
+local str = ""
+if debug then
+    str = "configurationDevelopment.lua"
+else
+    str = "configuration.lua"
+end
+
+local conf = require(str)
 
 local lastOut = 0
 class "Killstreak"
@@ -71,12 +79,10 @@ function Killstreak:__init()
 end
 
 function Killstreak:disableScore(vehicle, player)
-    print("Disabled score for " .. tostring(player.name))
     self.playerScoreDisabled[player.id] = true
 end
 
 function Killstreak:enableScore(vehicle, player)
-    print("Enabled score for " .. tostring(player.name))
     self.playerScoreDisabled[player.id] = false
 end
 
@@ -93,7 +99,6 @@ end
 
 function Killstreak:resetScore(player, punisher, position, weapon, isRoadKill, isHeadShot, wasVictimInREviveState)
     if self.playerKillstreakScore[player.id] ~= 0 then
-        print("Player " .. tostring(player.name) .. " is dead. Reseting Points")
         self.playerKillstreakScore[player.id] = 0
         NetEvents:SendTo("Killstreak:ScoreUpdate", player, tostring(self.playerKillstreakScore[player.id]))
     end
@@ -123,7 +128,6 @@ function Killstreak:sendConfToNewClient(player)
         self.playerScoreDisabled[player.id] = false
     end
     if self.playerKillstreakScore[player.id] ~= nil and self.playerKillstreakScore[player.id] ~= 0 then
-        print("Sending score to known player: " .. tostring(self.playerKillstreakScore[player.id]))
         NetEvents:SendTo("Killstreak:ScoreUpdate", player, tostring(self.playerKillstreakScore[player.id]))
     end
     NetEvents:SendTo("Killstreak:Client:getConf", player, json.encode(conf))
@@ -133,7 +137,6 @@ function Killstreak:updatePlayerKS(player, ks)
     self.playerKillstreaks[player.id] = ks
 end
 function Killstreak:ResetState()
-    print("reset state")
     self.playerKillstreakScore = {}
     self.playerScores = {}
 end
@@ -147,18 +150,9 @@ function Killstreak:OnPlayerLeft(player)
 end
 
 function Killstreak:usedSteps(playerObj, usedStep)
-    print("used: " .. tostring(usedStep))
-    print("p ks" .. json.encode(self.playerKillstreaks[playerObj.id]))
-    print("cost: " .. tostring(self.playerKillstreaks[playerObj.id][usedStep][3]))
     self.playerKillstreakScore[playerObj.id] =
         self.playerKillstreakScore[playerObj.id] - self.playerKillstreaks[playerObj.id][usedStep][3]
-    print(
-        "Player " ..
-            tostring(playerObj.name) ..
-                " used Killstreaknr. " ..
-                    tostring(usedStep) ..
-                        " and a new KillStreak-Score: " .. tostring(self.playerKillstreakScore[playerObj.id])
-    )
+
     NetEvents:SendTo("Killstreak:ScoreUpdate", playerObj, tostring(self.playerKillstreakScore[playerObj.id]))
 end
 
@@ -170,7 +164,6 @@ function Killstreak:OnPlayerUpdate(player, deltaTime)
     if self.playerScores[player.id] ~= nil and self.playerScoreDisabled[player.id] then
         if player.score > self.playerScores[player.id] then
             self.playerScores[player.id] = player.score
-            print("new player score: " .. tostring(self.playerScores[player.id]))
         end
         return
     end
@@ -189,13 +182,7 @@ function Killstreak:OnPlayerUpdate(player, deltaTime)
         modified = true
     end
     if modified and self.playerKillstreakScore[player.id] ~= nil then
-        print(
-            "Player " ..
-                tostring(player.name) ..
-                    " has new Ingame-Score: " ..
-                        tostring(player.score) ..
-                            " and a new KillStreak-Score: " .. tostring(self.playerKillstreakScore[player.id])
-        )
+
         NetEvents:SendTo("Killstreak:ScoreUpdate", player, tostring(self.playerKillstreakScore[player.id]))
     end
 end
