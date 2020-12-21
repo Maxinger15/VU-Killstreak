@@ -19,6 +19,8 @@ class App extends React.Component {
       timers: [],
       selectedStep: -10,
       menuVisible: true,
+      curStep: 0,
+      score: 0
     };
     this.toggle = this.toggle.bind(this);
     this.getAllKillstreaks = this.getAllKillstreaks.bind(this);
@@ -32,6 +34,19 @@ class App extends React.Component {
     this.newTimer = this.newTimer.bind(this);
     this.showNotification = this.showNotification.bind(this);
     this.selectedStep = this.selectedStep.bind(this);
+  }
+  updateScoreCallback = (e) => {
+    if(e.detail < 0){
+      e.detail = 0
+    }
+    this.setState({
+      score: e.detail
+    });
+  };
+  setCurStep(step) {
+    this.setState({
+      curStep: step,
+    });
   }
 
   clearAllTimers() {
@@ -181,7 +196,7 @@ class App extends React.Component {
       });
       document.addEventListener("keydown", this.toggle, false);
     }
-
+    document.addEventListener("Killstreak:UpdateScore", this.updateScoreCallback);
     document.addEventListener(
       "Killstreak:UI:getAllKillstreaks",
       this.getAllKillstreaks,
@@ -226,7 +241,10 @@ class App extends React.Component {
     if (process.env.NODE_ENV !== "production") {
       document.removeEventListener("keydown", this.toggle, false);
     }
-
+    document.removeEventListener(
+      "Killstreak:UpdateScore",
+      this.updateScoreCallback
+    );
     document.removeEventListener(
       "Killstreak:UI:getAllKillstreaks",
       this.getAllKillstreaks,
@@ -378,22 +396,18 @@ class App extends React.Component {
         {this.state.menuVisible ? (
           <div
             style={{
-              width: "100%",
-              height: "100%",
               position: "absolute",
-              top: "0px",
-              left: "0px",
+              top: "50%",
+              left: "50%",
             }}
           >
-            <div
-              style={{
-                position: "absolute",
-                top: "43%",
-                left: "46%",
-              }}
-            >
-              <RadialMenu />
-            </div>
+            <RadialMenu
+              killstreaks={this.state.selectedKillstreaks}
+              layout={this.getOriginalLayoutArray(
+                this.state.selectedKillstreaks
+              )}
+              score={this.state.score}
+            />
           </div>
         ) : null}
       </>

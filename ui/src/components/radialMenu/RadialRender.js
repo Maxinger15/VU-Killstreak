@@ -8,8 +8,8 @@ function RChild(props) {
 			className={rChildClass}
 			style={{
 				position: "absolute",
-				top: `${props.top}px`,
-				left: `${props.left}px`,
+				top:  `${props.top}px`,
+				left: props.index === 3 || props.index === 1? "50%" : `${props.left}px`,
 			}}
 		>
 			{props.children}
@@ -57,11 +57,12 @@ function RadialRender(props) {
 		<div
 			ref={containerRef}
 			className="radial-render-container"
-			style={{ margin: "0", padding: "0", position: "relative" }}
+			style={{ margin: "0", padding: "0", position: "relative",marginTop:"-50%",left:"-50%" }}
 		>
 			{points.map((point, i) => (
 				<RChild
 					key={props.genKey ? props.genKey() : `radial-render-${i}`}
+					index={i}
 					top={point.y - leastY}
 					left={point.x - leastX}
 				>

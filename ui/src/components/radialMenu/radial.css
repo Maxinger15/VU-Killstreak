@@ -1,0 +1,26 @@
+.ant-btn-primary{
+    background: rgba(41, 69, 95, 0.55);
+}
+
+.ant-btn-primary:hover{
+    background: rgba(41, 69, 95, 0.95);
+}
+
+.ant-btn-primary:focus{
+    background: rgba(41, 69, 95, 0.95);
+}
+
+.ant-btn-link{
+    background: rgba(57, 58, 58, 0.55);
+    color: rgba(150, 151, 151, 0.85);
+}
+
+.ant-btn-link:hover{
+    background: rgba(57, 58, 58, 0.55);
+    color: rgba(150, 151, 151, 0.85);
+}
+
+.ant-btn-link:focus{
+    background: rgba(57, 58, 58, 0.55);
+    color: rgba(150, 151, 151, 0.85);
+}
