@@ -1,7 +1,7 @@
 
 local settings = require("settings.lua")
 local outputs = 0
-local debug = true
+local debug = false
 local str = ""
 if debug then
     str = "configurationDevelopment.lua"
