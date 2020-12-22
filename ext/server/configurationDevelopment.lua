@@ -39,10 +39,10 @@ local conf = {
         "Dummy Description"
       },
       {
-        "vu-artillerystrike",
+        "vu-ks-tank",
         65,
-        550,
-        "Dummy 3",
+        190,
+        "Tank",
         "Left %NR",
         "Press F9 to use",
         "Dummy Description"

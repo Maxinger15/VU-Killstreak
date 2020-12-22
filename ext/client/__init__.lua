@@ -241,6 +241,7 @@ Events:Subscribe(
 
         for i, v in pairs(selectedKillstreaks) do
             if InputManager:WentKeyUp(tonumber(bindings[i])) and inUse[i] == false then
+                print(tostring(i) .. " | " ..tostring(step))
                 if i <= step then
                     -- quit if the current KS is still running
                     if running[i] == true then
@@ -303,7 +304,7 @@ function getConf(config)
 end
 
 function calcStep(data)
-    count = 1
+    count = 0
     tempTable = {}
     if selectedKillstreaks ~= nil then
         tempTable = selectedKillstreaks
@@ -315,7 +316,7 @@ function calcStep(data)
         return
     end
     for i = 1, count, 1 do
-        if i + 1 == count then
+        if i  == count then
             step = 4
             break
         end
