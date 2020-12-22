@@ -165,7 +165,7 @@ Events:Subscribe(
     "Soldier:HealthAction",
     function(soldier, action)
         if action == HealthStateAction.OnManDown then
-            if player.id == PlayerManager:GetLocalPlayer().id then
+            if soldier.player.id == PlayerManager:GetLocalPlayer().id then
                 if soldier.player ~= nil then
                     disableInteractions()
                 else
