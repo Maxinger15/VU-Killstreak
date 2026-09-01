@@ -1,0 +1,10 @@
+.timerList {
+  /* Use px units consistently to avoid layout calculation deviations under different GameFace resolutions */
+  padding-top: 15px;  
+  height: 150px;      /* Based on common 1080p ratio, can be fine-tuned as needed */
+  overflow: hidden;
+  
+  /* Explicitly declare flex direction to prevent abnormal stacking of children */
+  display: flex;
+  flex-direction: column;
+}

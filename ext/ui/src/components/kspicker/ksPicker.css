@@ -1,0 +1,209 @@
+/* The outermost container of the entire picker */
+.ks-wrapper {
+  /* Overall distance from the left edge of the screen (in pixels). Larger value moves it right, smaller moves it left */
+  margin-left: -130px;
+  
+  /* 📍 Overall distance from the right edge of the screen (in pixels). Usually keep auto to align left; change to fixed value to force right margin */
+  margin-right: auto;
+  
+  /* Total width of the entire box (in pixels). Larger value makes the box wider, and the divider line will also extend */
+  width: 1205px;
+  
+  /* 📏 Total height of the entire box (in pixels). Larger value makes the box taller, and the footer signature will move down */
+  height: 300px;
+  
+  /* Overall distance from the top edge of the screen (in pixels). Larger value moves it down; decrease to let the divider and close button脱离游戏UI (leave game UI) */
+  margin-top: -120px;
+  
+  /* Background stays transparent, does not block the game */
+  background-color: transparent;
+  
+  /* Arrange internal elements from top to bottom */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header area: title, counter, and divider line */
+.ks-header {
+  /* Distance from the divider line to the text above (in pixels) */
+  padding-bottom: 30px;
+  
+  /* Distance from the divider line to the cards area below (in pixels) */
+  margin-bottom: 10px;
+  
+  /* Thickness and color of the divider line. 2px is thickness, white is color */
+  border-bottom: 2px solid white;
+  
+  /* Internal text color */
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  
+  /* Arrange title, counter, and close button horizontally, left, center, right respectively */
+  display: flex;
+  /* ✅ Change: removed justify-content: space-between, use absolute positioning for true centering */
+  justify-content: flex-start; /* changed to left alignment, letting absolute positioning take over placement */
+  align-items: center;
+  
+  /* ✅ New: set relative positioning as the reference for absolute positioning of children */
+  position: relative;
+}
+
+/* Title text (left side) */
+.ks-header > span:first-child {
+  /* ✅ New: fixed to the left */
+  position: absolute;
+  left: 0;
+}
+
+/* Counter text (center) */
+.ks-header > span:nth-child(2) {
+  /* ✅ New: truly centered over the whole divider width */
+  position: absolute;
+  left: 50%; /* start from 50% from the left */
+  transform: translateX(-50%); /* shift back by 50% of its own width to achieve perfect centering */
+}
+
+/* Close button (X) on the top right */
+.ks-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  /* 🔤 Change this to alter the size of the X (in pixels) */
+  font-size: 22px;
+  /* Change this to adjust the clickable blank area around the X (in pixels) */
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* ✅ New: fixed to the right */
+  position: absolute;
+  right: 0;
+}
+
+/* Blue small square background when hovering over the X */
+.ks-close-btn:hover {
+  /* 🎨 Change this to control the opacity of the hover background on the X (1 = fully opaque most visible, 0.5 = semi-transparent) */
+  background-color: rgba(41, 69, 95, 1);
+}
+
+/* Area that holds the 4 skill cards */
+.ks-grid {
+  /* Gap between the 4 cards (in pixels). Increase to spread cards apart, decrease to pack them closer */
+  gap: 15px;
+  
+  /* 📏 Distance from the card area to the divider line above (in pixels) */
+  padding-top: 4px;
+  padding-bottom: 4px;
+  
+  /* Arrange 4 cards horizontally, automatically divide width evenly */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Individual skill card wrapper */
+.ks-card {
+  /* Width of each card (in pixels). The sum of 4 card widths + 3 gaps must equal the width of .ks-wrapper */
+  width: 290px;
+  
+  /* 📏 Height of each card (in pixels). Increase to make cards taller, decrease to make them shorter */
+  height: 180px;
+  
+  /* 🎨 Background color inside the card (semi-transparent blue-gray) */
+  background-color: rgba(41, 69, 95, 0.75);
+  
+  /* Border color and thickness of the card (semi-transparent white when not selected) */
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  
+  /* 📏 Distance from internal text to the border (in pixels). Increase to move text away from edges, decrease to bring it closer */
+  padding: 8px;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Border style when card is selected */
+.ks-card-selected {
+  /* Border color changes to green when selected */
+  border-color: #3bc406;
+}
+
+/* Skill name text inside the card */
+.ks-card-title {
+  /* 🔤 Change this to alter the font size of the skill name (in pixels) */
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  /* Distance from the name to the divider line below (in pixels) */
+  margin-bottom: 8px;
+  /* 📏 Minimum height to prevent long names from breaking layout (in pixels), ensuring the title area occupies 40% */
+  min-height: 72px; /* 40% of 180px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7); /* directly adds a bottom border */
+  /* Note: border-bottom sits right below the text, so adjust margin-bottom to control spacing */
+}
+
+/* Required score text inside the card */
+.ks-card-desc {
+  /* 🔤 Change this to alter the font size of the score text (in pixels) */
+  font-size: 12px;
+  color: white;
+  opacity: 0.9;
+  text-align: center;
+  /* 📏 Distance from the score to the divider line above (in pixels) */
+  margin-top: 8px;
+  /* 📏 Distance from the score to the button below (in pixels). Decrease to make the score stick closer to the button box */
+  margin-bottom: 6px;
+  /* 📏 Let the score and button area occupy the bottom 60% of the card, combined with flex to automatically achieve 40% top / 60% bottom ratio */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* Plus / Check button at the bottom of the card */
+.ks-btn {
+  width: 100%;
+  /* Padding inside the button (top/bottom, left/right) in pixels. Increase to make button thicker, decrease to make it thinner */
+  padding: 6px;
+  background: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  /* 🔤 Change this to alter the size of the + / ✓ (in pixels) */
+  font-size: 18px;
+}
+/* White box effect when hovering over the button */
+.ks-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid white;
+}
+
+/* Footer developer credit text */
+.ks-footer {
+  /* 📍 Distance from the footer text to the cards above (in pixels). Increase to move it down, decrease to move it up */
+  margin-top: 6px;
+  
+  /* 📍 Distance from the footer text to the left edge (in pixels). 0 means flush left, increase to move right */
+  padding-left: 0;
+  
+  /* 🔤 Change this to alter the font size of the footer text (in pixels) */
+  font-size: 13px;
+  color: white;
+  opacity: 0.8;
+  text-align: left;
+}

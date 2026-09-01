@@ -1,0 +1,48 @@
+/* =========================================
+   Top-right blue notification box styling (strictly follows VU/GameFace API)
+   All adjustable numbers have their roles described; change numbers to adjust position/size
+   ========================================= */
+
+
+/* Put at the very top of index.css */
+* {
+  background-color: transparent;
+  user-select: none;
+  box-sizing: border-box;
+  font-family: bf3Better, Arial, sans-serif;  /* added fallback font */
+}
+
+/* Overall control of the top-right blue notification box */
+.ksNotification {
+  /* Background color (RGBA format: red, green, blue, alpha) */
+  /* Change the 4th number to control transparency: 0.1 = very transparent, 1.0 = fully opaque */
+  background-color: rgba(5, 57, 97, 0.85);
+  
+  /* Shadow effect (adds a 3D feel to the box) */
+  /* Order: horizontal offset, vertical offset, blur radius, spread radius, color */
+  box-shadow: 2px 2px 4px 2px rgba(5, 57, 97, 0.2);
+  
+  /* Text color */
+  color: white;
+  
+  /* Padding between internal text and the border (in pixels) */
+  /* Order: 10px top/bottom, 14px left/right. Increase to move text away from edges, decrease to bring it closer */
+  padding: 10px 14px;
+  
+  /* Border radius (in pixels). 0 = sharp corners, larger = more rounded */
+  border-radius: 4px;
+  
+  /* Minimum width of the box (in pixels). Prevents the box from shrinking too much when text is short */
+  min-width: 200px;
+  
+  /* Positioning: fixed = fixed on screen, does not scroll with game content */
+  position: fixed;
+  
+  /* Vertical position: percentage from the top of the screen */
+  /* Increase to move down, decrease to move up. 10% = 10% of screen height from the top */
+  top: 15%;
+
+  /* Horizontal position: percentage from the right edge of the screen */
+  /* Increase to move left, decrease to move right. 10% = 10% of screen width from the right */
+  right: 2%;
+}

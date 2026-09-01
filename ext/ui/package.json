@@ -1,0 +1,27 @@
+{
+  "name": "vu-killstreak-ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vextjs/vite-plugin": "^0.4.0",
+    "clsx": "^2.1.1",
+    "react": "^19.2.0",
+    "react-countdown-circle-timer": "^2.5.4",
+    "react-dom": "^19.2.0",
+    "sass": "^1.93.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "~5.9.3",
+    "vite": "^7.1.7"
+  }
+}

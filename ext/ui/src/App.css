@@ -1,0 +1,40 @@
+@font-face {
+  font-family: battlefield3;
+  src: url(./assets/bebas.ttf);
+}
+
+@font-face {
+  font-family: bf3Better;
+  src: url(./assets/bffont.otf);
+}
+
+* {
+  font-family: bf3Better;
+  margin: 0;
+  padding: 0;
+}
+
+.overallBackground {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+}
+
+/* Removed all .ant-* styles (50+ lines) */
+
+.ksButton {
+  color: white;
+  font-size: 16px;
+  padding: 8px 16px;
+  background: rgba(41, 69, 95, 0.75);
+  border: 1px solid white;
+  cursor: pointer;
+}
+
+.infoText {
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  margin: 10px 0;
+  padding: 8px;
+}
